@@ -1,0 +1,146 @@
+﻿to MouseDragTo startCoor,EndCoor
+
+	set desktopTotalYPixel to the bottom of the RemoteScreenRectangle
+	set desktopTotalXPixel to the Right of the RemoteScreenRectangle
+	
+	// Make sure start and end coordinates are within the remote screen bounds
+	set startCoor to CheckCoordinateWithinBounds(startCoor, desktopTotalXPixel, desktopTotalYPixel)
+	set EndCoor to CheckCoordinateWithinBounds(EndCoor, desktopTotalXPixel, desktopTotalYPixel)
+	
+	//if given coordinate is not in within the support range, will reset to 0 if is less than 0
+	if items 1 of startCoor < 0
+		set items 1 of startCoor to 0
+	end if
+	if items 2 of startCoor < 0
+		set items 2 of startCoor to 0
+	end if
+	
+	if items 1 of EndCoor < 0
+		set items 1 of EndCoor to 0
+	end if
+	if items 2 of EndCoor < 0
+		set items 2 of EndCoor to 0
+	end if
+	
+	if items 1 of startCoor > desktopTotalXPixel
+		set items 1 of startCoor to desktopTotalXPixel
+	end if
+	if items 2 of startCoor > desktopTotalYPixel
+		set items 2 of startCoor to desktopTotalYPixel
+	end if
+	
+	if items 1 of EndCoor > desktopTotalXPixel
+		set items 1 of EndCoor to desktopTotalXPixel
+	end if
+	if items 2 of EndCoor > desktopTotalYPixel
+		set items 2 of EndCoor to desktopTotalYPixel
+	end if
+	
+	MoveTo(startCoor)
+	MouseButtonDown  1
+	MoveTo(EndCoor)
+	MouseButtonUp 1
+	wait 2
+	
+end MouseDragTo
+
+to MouseDragDesktopIcon imageName,dragValue, dragSpeed
+
+	--ADT-609 by Zi Jing Tan
+	-- Define the pixel tolerance
+	put [5,5] into pixelTolerance
+	
+	-- Get the current image location
+	set imageCoor to ImageLocation(imageName)
+	
+	-- Calculate the expected final coordinate after drag
+	set finalCoor = imageCoor + dragValue
+	
+	-- Perform the drag action
+	Drag imageCoor
+	Drop finalCoor
+	
+	-- Wait for 2 seconds for the image to settle
+	wait 2
+	
+	-- Get the actual image location after drag
+	put ImageLocation(imageName) into actualLocation
+	
+	if actualLocation = imageCoor
+		set currentResultRate = false
+		LogWarning "The Icon not moving, start coordinate: " & imageCoor & ". Moved " & dragValue & " expected coordinate = " & finalCoor & " actual coordinate = " & actualLocation
+		
+	else if (actualLocation >= (finalCoor - pixelTolerance)) or (actualLocation <= (finalCoor + pixelTolerance))
+		set currentResultRate = true
+		LogSuccess "The Icon Dragged successfully to expected coordinate " & finalCoor & " with drag speed " & dragSpeed & ". Actual location after drag is " & actualLocation
+		
+	else 
+		set currentResultRate = false
+		LogWarning "The Icon Drag with error, start coordinate: " & imageCoor & ". Moved " & dragValue & " expected coordinate = " & finalCoor & " actual coordinate = " & actualLocation
+		
+	end if
+	
+	Drag finalCoor
+	Drop imageCoor
+	return currentResultRate
+	
+end MouseDragDesktopIcon
+
+to MouseDragReleaseDesktopIcon imageName,dragValue, dragSpeed
+
+	--ADT-609 by Zi Jing Tan
+	-- Define the pixel tolerance
+	put [5,5] into pixelTolerance
+
+	-- Get the current image location
+	set imageCoor to ImageLocation(imageName)
+	
+	-- Calculate the expected final coordinate after drag
+	set finalCoor = imageCoor + dragValue
+	
+	-- Perform the drag action
+	Drag imageCoor
+	Drop finalCoor
+	
+	-- Wait for 2 seconds for the image to settle
+	wait 2
+	
+	-- Get the actual image location after drag
+	put ImageLocation(imageName) into actualLocation
+	
+	if actualLocation = imageCoor
+		set currentResultRate = false
+		LogWarning "The Icon not moving, start coordinate: " & imageCoor & ". Moved " & dragValue & " expected coordinate = " & finalCoor & " actual coordinate = " & actualLocation
+		
+	else if (actualLocation >= (finalCoor - pixelTolerance)) or (actualLocation <= (finalCoor + pixelTolerance))
+		set currentResultRate = true
+		LogSuccess "The Icon Dragged successfully to " & finalCoor & " with drag speed " & dragSpeed
+		
+	else 
+		set currentResultRate = false
+		LogWarning "The Icon Drag with error, start coordinate: " & imageCoor & ". Moved " & dragValue & " expected coordinate = " & finalCoor & " actual coordinate = " & actualLocation
+		
+	end if
+	
+	Drag finalCoor
+	Drop imageCoor
+	
+	wait 2
+	return currentResultRate
+	
+end MouseDragReleaseDesktopIcon
+
+
+to CheckCoordinateWithinBounds(coor, maxX, maxY)
+
+	// Check if coordinate is within bounds, adjust if necessary
+	set newX to items 1 of coor
+	set newY to items 2 of coor
+	if newX < 0 then set newX to 0
+	if newX > maxX then set newX to maxX
+	if newY < 0 then set newY to 0
+	if newY > maxY then set newY to maxY
+	return {newX, newY}
+
+end CheckCoordinateWithinBounds
+

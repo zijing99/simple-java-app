@@ -1,0 +1,23 @@
+﻿params size
+
+Set maxwait=5
+
+TypeText WindowsKey, "r"
+TypeText "explorer.exe", enterKey
+
+if imagefound(imageName:"FileExplorer/FileExplorerTitle", waitFor: maxwait)
+	if size is not "Maximize"
+		if imagefound(imageName:"Chrome/restoreDownIcon",  waitFor: maxwait)
+			click "Chrome/restoreDownIcon"
+		end if
+	else
+		TypeText altKey, spacebar
+		TypeText x
+		wait 3 -- UI needs to be settled down		
+	end if
+else
+	LogError "Unable to open file explorer."
+end if
+
+
+

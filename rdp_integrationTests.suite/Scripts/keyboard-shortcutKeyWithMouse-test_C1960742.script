@@ -1,0 +1,97 @@
+﻿BeginTestCase  "Free RDP: Mouse and Keyboard composite key Test"
+--TestRail: C1960742
+-- To test shortcut key combination with Mouse click event
+-- Use case 1: Shift + Left Mouse Click : Able to select multiple files or folder\
+-- Use case 2: Control + Left Mouse Click : Able to deselect files or folder
+
+-- Change History
+-- 13th October 2023
+-- Scope down the search rectangle to more specific area 
+
+Try
+	
+	Run "Apps/LaunchExplorer","Maximize"
+	Click "FileExplorer/DesktopIconText"
+	
+	set maxWait = 5
+	set searchRectangle="Helpers/screenPart"("Helpers/screenPortions".appWindowLeftHalfExplorer)
+	
+	if ImageFound(Image:"FileExplorer/ShiftFolder") = true
+		"Helpers/SUT".clickText maxWait , "ShiftFolder", searchRectangle
+		TypeText deleteKey	
+	end if
+	
+	TypeText controlKey, shiftKey,"n"
+	TypeText "ShiftFolder"
+	TypeText return
+	
+	//unfocus 
+	"Helpers/SUT".clickText maxWait , "EC2 Feedback", searchRectangle, offset:[0,300] by name 
+
+	wait 2
+	
+	"Helpers/SUT".doubleClickText maxWait , "ShiftFolder", searchRectangle
+	
+	set index = 97
+	repeat until index > 99
+		TypeText controlKey, shiftKey,"n"
+		TypeText numToChar(index) -- shows "a"
+		TypeText return
+		set index = index + 1
+	end repeat
+	
+	//unfocus 
+	"Helpers/SUT".clickText maxWait , "a", searchRectangle, offset:[0,400] by name 
+	//"Helpers/SUT".clickText maxWait , "ShiftFolder_d", searchRectangle, offset:[0,300] by name 
+	
+	// Use case: To test ShortCut Key with Mouse event triggering
+	// Shift + Left Mouse Click : Able to select multiple files or folder
+	"Helpers/SUT".clickText maxWait , "c", searchRectangle
+	Keydown shiftKey	
+	"Helpers/SUT".clickText maxWait , "b", searchRectangle
+	"Helpers/SUT".clickText maxWait , "a", searchRectangle
+	Keyup shiftKey
+	wait 0.6
+	
+	if ImageFound("ShiftFolderMouse/ShiftKeyValidation")
+		LogSuccess "ShiftKey with Mouse is working."
+	else
+		LogWarning "ShiftKey with Mouse is not working."
+	end if
+	
+	// Use case: To test ShortCut Key with Mouse event triggering
+	// Control + Left Mouse Click : Able to deselect files or folder
+	
+	KeyDown controlKey
+	"Helpers/SUT".clickText maxWait , "a", searchRectangle
+	"Helpers/SUT".clickText maxWait , "b", searchRectangle
+	"Helpers/SUT".clickText maxWait , "c", searchRectangle
+	KeyUp controlKey
+	wait 0.6
+	
+	if ImageFound("ShiftFolderMouse/ControlKeyValidation")
+		LogSuccess "ControlKey with Mouse is working."
+	else
+		LogWarning "ControlKey with Mouse is not working."
+	end if
+	
+	Click "FileExplorer/DesktopIconText"
+	wait 0.6
+	
+	if ImageFound(Image:"FileExplorer/ShiftFolder") = true
+		"Helpers/SUT".clickText maxWait , "ShiftFolder", searchRectangle
+		TypeText deleteKey	
+	end if
+	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+catch exception	
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try	
+
+EndTestCase  "Free RDP: Mouse and Keyboard composite key Test"
+
+

@@ -1,0 +1,3 @@
+﻿BeginTestCase  "Free RDP: Get RemoteClipboard Test"
+Run "ClipboardTest/RemoteClipboardTest"
+EndTestCase "Free RDP: Get RemoteClipboard Test"

@@ -1,0 +1,60 @@
+﻿(**Generic helper functions**)
+
+to resetAndCloseChrome maxWait
+
+	if ImageFound("Chrome/ShareIcon", "Chrome/ChromeNewTab")
+		
+		// Make sure the chrome is active on the window
+		Click "Chrome/ChromeAddTab"
+		
+		repeat until ImageFound("Chrome/ChromeIcon")
+			TypeText AltKey&F4
+		end repeat
+		
+	end if 
+	
+	set SearchRectangle to empty
+	
+end resetAndCloseChrome
+
+
+to resetAndCloseNotepad maxWait
+	clearNotePadText maxWait
+	TypeText AltKey&F4	
+	set SearchRectangle to empty	
+end resetAndCloseNotepad
+
+
+to resetAndCloseFileExplorer maxWait
+
+	if ImageFound("FileExplorer/DesktopFileExplorerFormat")
+		
+		repeat until ImageFound("Chrome/chromeIcon")
+			TypeText AltKey&F4
+		end repeat
+		
+	end if 
+	
+end resetAndCloseFileExplorer
+
+
+to resetAndCloseDesktopFileExplorer
+
+	if ImageFound("FileExplorer/DesktopFileExplorerFormat")
+		
+		repeat until ImageFound("Chrome/chromeIcon")
+			TypeText AltKey&F4
+		end repeat
+		
+	end if 
+	set SearchRectangle to empty
+	
+end resetAndCloseDesktopFileExplorer
+
+
+to clearNotePadText maxWait
+
+	TypeText ControlKey & A
+	TypeText Backspace
+	
+end clearNotePadText

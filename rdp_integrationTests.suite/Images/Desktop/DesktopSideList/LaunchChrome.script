@@ -1,0 +1,30 @@
+﻿params size
+rightClick[0,0]
+if imagefound("Chrome/ChromeNewTab") = false
+(*TypeText windowsKey,"r"
+	TypeText "chrome"&return*)
+	(*click "Desktop/DesktopIcon"*)
+	click [0,0]
+	repeat until imagefound("Desktop/DesktopSideList")
+		--Click imageName:"Desktop/DesktopIcon", waitFor:5
+		TypeText windowsKey
+	end repeat
+	WaitFor 5, "Desktop/DesktopSideList"
+	
+	TypeText "chrome"
+	TypeText return
+	
+	if ImageFound("Chrome/ExpandButton")
+		
+		click "Chrome/ExpandButton"
+		
+	end if
+	
+	if size is not "Maximize"
+		if imagefound("Chrome/restoreDownIcon")
+			click "Chrome/restoreDownIcon"
+		end if
+		
+	end if
+	
+end if 

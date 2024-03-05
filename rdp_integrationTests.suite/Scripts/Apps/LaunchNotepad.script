@@ -1,0 +1,18 @@
+﻿--to launch notepad
+
+Set maxwait=5
+
+TypeText WindowsKey, "r"
+TypeText "notepad.exe", returnKey
+--Note: for this use case, enterKey is not working in Classic RDP, use returnKey is working for Classic RDP and EPGW-FreeRDP, also checked EPF CommandsRegression.suite is using returnKey for this use case.
+
+If ImageFound(imageName:"Notepad/UntitledNotepadFileEditFormatV", waitFor:maxwait)
+	
+	TypeText altKey,spacebar
+	TypeText x
+	wait 3 -- UI needs to be settled down
+	
+	LogSuccess "Notepad launched"
+else
+	LogWarning "Couldn't find Notepad."
+end if

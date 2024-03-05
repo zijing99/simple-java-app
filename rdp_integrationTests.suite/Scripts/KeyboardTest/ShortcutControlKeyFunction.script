@@ -1,0 +1,394 @@
+﻿--Functions for Shortcut Control Key Test
+to bookmarkTest maxWait, enterURL
+
+	// Control + D test 
+	// Bookmark Test		
+	Run "Apps/LaunchChrome","Maximize"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	TypeText return
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	TypeText ControlKey&d
+	
+end bookmarkTest
+
+to newTabTest maxWait
+
+	// Control + N test
+	// New Tab test
+	Run "Apps/LaunchChrome","Maximize"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	TypeText return
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	TypeText ControlKey&n
+	
+end newTabTest
+
+to notepadNewSaveTest maxWait
+
+	// Control + N test
+	// Notepad new tab test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText "Notepad control + n test"
+	
+	TypeText ControlKey&n
+	
+end notepadNewSaveTest
+
+to openFileWindowTest maxWait
+
+	// Control + O test
+	// Open file window test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText ControlKey&o
+	
+end openFileWindowTest
+
+to selectAllTest maxWait
+
+	// Control + A test
+	// Select all test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText return & return
+	TypeText "Control A test"
+	TypeText return & return
+	
+	TypeText ControlKey&A
+	
+end selectAllTest
+
+to textBoldTest maxWait
+
+	// Control + B test
+	// Text bold test
+	set imageNametoRead = "Wordpad/UntitledWordpadFormat"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchWordpad"
+		
+	end if
+	
+	TypeText ControlKey&B
+	TypeText "Control B test"
+	TypeText return & return 
+	
+end textBoldTest
+
+to textItalicTest maxWait
+
+	// Control + I test
+	// Text italic test
+	set imageNametoRead = "Wordpad/UntitledWordpadFormat"
+	if ImageFound( imageNametoRead) = false
+		Run "Apps/LaunchWordpad"
+	end if
+	
+	TypeText ControlKey&I
+	TypeText "Control I test"
+	TypeText return & return 
+	
+end textItalicTest
+
+to textUnderlineTest maxWait
+
+	// Control + U test
+	// Text underline test
+	set imageNametoRead = "Wordpad/UntitledWordpadFormat"
+	if ImageFound( imageNametoRead) = false		
+		Run "Apps/LaunchWordpad"		
+	end if
+	
+	TypeText ControlKey&U
+	TypeText "Control U test"
+	TypeText return & return 
+	
+end textUnderlineTest
+
+to searchTest maxWait
+
+	// Control + F test
+	// Search test
+	Run "Apps/LaunchExplorer","Maximize"
+	
+	TypeText ControlKey&f
+	
+end searchTest
+
+to savingTest maxWait
+
+	// Control + S test
+	// Saving test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText ControlKey&s
+	
+end savingTest
+
+to cutAndPasteTest maxWait
+
+	// Control + X + V test
+	// Cut and paste test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound(imageNametoRead) = false		
+		Run "Apps/LaunchNotepad"		
+	end if
+	
+	TypeText "Control X test"
+	TypeText ControlKey&a
+	TypeText ControlKey&x
+	
+	Helper.resetAndCloseNotepad
+	
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false		
+		Run "Apps/LaunchNotepad"		
+	end if
+	
+	TypeText return & return
+	TypeText ControlKey&v
+	TypeText return & return 
+	
+end cutAndPasteTest
+
+to copyTextTest maxWait
+
+	// Control + C test
+	// Copy text test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText "Control C test"
+	TypeText ControlKey&a
+	TypeText ControlKey&c
+	TypeText Backspace
+	
+	Helper.resetAndCloseNotepad
+	
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText ControlKey&v
+	TypeText return & return
+	
+end copyTextTest
+
+to insCopyTextTest maxWait
+
+	// Control + INS  test
+	// Copy text test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText "Control INS test"
+	TypeText ControlKey&a
+	TypeText ControlKey&InsertKey
+	TypeText Backspace
+	TypeText AltKey&F4
+	
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText ControlKey&v
+	TypeText return & return 
+	
+end insCopyTextTest
+
+
+to undoAndRedoTest maxWait
+
+	// Control + Z and Y test
+	// Undo Redo test
+	set imageNametoRead = "Wordpad/UntitledWordpadFormat"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchWordpad"
+		
+	end if
+	
+	TypeText "Undo and Redo test"
+	TypeText ControlKey&z
+	
+	WaitFor maxWait, "Wordpad/WordpadBlank"
+	
+	TypeText ControlKey&y
+	TypeText return & return 
+	
+end undoAndRedoTest
+
+to hyperlinkTest maxWait
+
+	// Control + K test 
+	// Hyperlink test	
+	Run "Apps/LaunchChrome","Maximize"
+	
+	WaitFor maxWait, "Chrome/ChromeNewTab"
+	
+	Typetext ControlKey&k
+	
+end hyperlinkTest
+
+to printCurrentPageTest maxWait
+
+	// Control + P test
+	// Print Current Page test
+	Run "Apps/LaunchChrome","Maximize"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	TypeText ControlKey&p
+	
+end printCurrentPageTest
+
+to returnToHomeTest maxWait
+
+	// Control + Home test
+	// Return to Home test
+	Run "Apps/LaunchChrome","Maximize"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	TypeText PageDown 
+	TypeText ControlKey&HomeKey
+	
+end returnToHomeTest
+
+to goToEndTest maxWait
+
+	// Control + End test
+	// Return to Home test
+	Run "Apps/LaunchChrome","Maximize"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	// change to ocr to detect the footer //
+	TypeText ControlKey&EndKey
+	
+end goToEndTest
+
+to controlLeftTest maxWait
+
+	// Control + Left test
+	// Move one word left test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText return & return
+	TypeText "Control Left test"
+	TypeText ControlKey&leftArrow
+	
+end controlLeftTest
+
+to controlRightTest maxWait
+
+	// Control + Right test
+	// Move one word right test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false
+		
+		Run "Apps/LaunchNotepad"
+		
+	end if
+	
+	TypeText return & return
+	TypeText "Control Right test"
+	TypeText ControlKey&leftArrow
+	TypeText ControlKey&leftArrow
+	TypeText ControlKey&rightArrow
+	
+	
+end controlRightTest
+
+
+to enterURL (urlName) 
+
+	WaitFor 5, "Chrome/ChromeNewTab"
+	TypeText controlKey, "l"
+	TypeText controlKey, "a"
+	TypeText backspace
+	TypeText urlName
+	TypeText return 
+	
+end enterURL
+
+to resetAndCloseNotepad maxWait
+	
+	if ImageFound("Notepad/UntitledNotepadFileEditFormatV")
+		
+		// Make sure the notepad is active on the window
+		Click imageName:"Notepad/UntitledNotepadFileEditFormatV"
+		
+		repeat until imagefound("Chrome/chromeIcon")
+			
+			TypeText AltKey&F4
+			
+			if ImageFound("Notepad/DontSaveNotepad")
+				
+				Click "Notepad/DontSaveNotepad"
+				
+			end if 
+			
+		end repeat
+		
+	end if
+	
+	set SearchRectangle to empty
+	
+end resetAndCloseNotepad
+
+

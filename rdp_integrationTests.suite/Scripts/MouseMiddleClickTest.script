@@ -1,0 +1,51 @@
+﻿BeginTestCase  "Free RDP: Mouse Middle Click Test"
+
+--TestRail.C1727282
+
+set maxWait = 5
+
+try 
+	// Launch Google Chrome
+	MoveTo imageName:"Chrome/chromeIcon", waitFor:maxWait
+	DoubleClick "Chrome/chromeIcon"
+	
+	// Launch Chrome in expand mode
+	if ImageFound(imageName:"Chrome/ExpandButton", waitFor:maxWait)
+		
+		Click "Chrome/ExpandButton"
+		
+	end if 
+	
+	// Verify Chrome Launch 
+	"Helpers/SUT".waitForText maxWait, "New Tab", "Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+	
+	// Peform Mouse Middle Click
+	MiddleClick imageName:"Chrome/RefreshButton"
+	
+	// Adjust and set the search rectangle for the second new tab
+	Set LRectResult to ImageRectangle (imageName:"Chrome/ChromeNewTab")
+	Set newLeftResult to (Left of LRectResult + 220)
+	Set newRightResult to (Right of LRectResult + 300)
+	Set newTopResult to (Top of LRectResult - 5)
+	Set newBottomResult to (Bottom of LRectResult + 5)
+	Put [newLeftResult, newTopResult, newRightResult, newBottomResult] into RRectResult
+	
+	// Validate the new tab shown after mouse middle click
+	"Helpers/SUT".assertTextFound maxWait, "New Tab", "Middle Click Works", RRectResult 
+	
+	// Make sure the browser is focus 
+	"Helpers/SUT".clickText maxWait, "New Tab", "Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+	
+	// Close Chrome
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+
+EndTestCase "Free RDP: Mouse Middle Click Test"
+

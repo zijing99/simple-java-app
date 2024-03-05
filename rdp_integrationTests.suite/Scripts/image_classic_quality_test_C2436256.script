@@ -1,0 +1,51 @@
+﻿
+BeginTestCase "Rdp - Image Color"
+
+Try
+	set maxWait =5
+	
+	// Launch New Windows Using Mouse
+	Run "Apps/LaunchChrome", "Maximize"
+	TypeText "https://eggplantsoftware.gitlab.io/products/epf/testbenchpages/checkColors.html"
+	TypeText enterKey
+	
+	// Colors identified on classic rdp
+	set productionColors to {
+		blue: [0,0,206] as color,
+		red: [206,0,0] as color,
+		green: [0,255,140] as color
+	}
+	
+	log ImageFound(ImageName:"Colors/blue_classic")
+	set foundBlue to ColorAtLocation("Colors/blue_classic") 
+	log "found this Blue: "&foundBlue
+	
+	log ImageFound(ImageName:"Colors/red_classic")
+	set foundRed to ColorAtLocation("Colors/red_classic") 
+	log "found this Red: "&foundRed
+	log ImageFound(ImageName:"Colors/green_classic")
+	set foundGreen to ColorAtLocation("Colors/green_classic") 
+	log "found this Green: "&foundGreen
+	
+	compareColor foundBlue, productionColors.blue
+	compareColor foundRed, productionColors.red
+	compareColor foundGreen, productionColors.green
+	
+	Click ImageLocation(ImageName:"Colors/red_green")	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+Catch theException
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError theException
+End try
+
+to compareColor foundColor, expectedColor
+	if foundColor = expectedColor
+		Log !"[[foundColor]] matches [[expectedColor]]"
+	else
+		LogError !"Found [[foundColor]] but expected [[expectedColor]]"
+	end if
+end compareColor
+
+EndTestCase "Rdp - Image Color"
+

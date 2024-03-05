@@ -1,0 +1,3 @@
+﻿BeginTestCase "Longevity master"
+Run "CombinationTest_Longevity/LongevityTest_C1952469"
+EndTestCase "Longevity master"

@@ -1,0 +1,10 @@
+﻿to  zoomInNotepad maxWait
+    
+	Run "Apps/LaunchNotepad"
+	
+	// Zoom in font size in Notepad
+	repeat 10 times
+		TypeText ControlKey & KeypadPlus
+	end repeat
+	
+end zoomInNotepad

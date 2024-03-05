@@ -1,0 +1,5 @@
+﻿BeginTestCase "RDP: Screen size test"
+put ConnectionInfo().ScreenSize into screenSize
+log screenSize
+assert that merge("[[screenSize.width]]x[[screenSize.height]]") is env(SCREEN_RESOLUTION)
+EndTestCase "RDP: Screen size test"

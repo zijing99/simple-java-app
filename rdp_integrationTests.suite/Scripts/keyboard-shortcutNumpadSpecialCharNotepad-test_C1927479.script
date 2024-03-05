@@ -1,0 +1,193 @@
+﻿BeginTestCase  "Free RDP: Keyboard Shortcut Numpad Special Characters Notepad Test"
+
+--Alt Key combination with keypad
+--TypeText Keypad0,Keypad2,Keypad2,Keypad4
+--KeyDown altKey
+--KeyUp altKey
+--TestRail.C1927479
+
+try
+	put 5 into maxWait 
+	
+	//Launch Notepad
+	set imageNameToRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNameToRead) = false
+		Run "Apps/LaunchNotepad"
+	end if
+	
+	
+	// Combination to type a-grave
+	// Alt key +  Num pad 0224
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad2,Keypad4
+	KeyUp altKey  
+	
+	// Combination to type e-grave
+	// Alt key +  Num pad 0232
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad3,Keypad2
+	KeyUp altKey  
+	
+	// Combination to type i-grave
+	// Alt key +  Num pad 0236
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad3,Keypad6
+	KeyUp altKey  
+	
+	// Combination to type 0-grave
+	// Alt key +  Num pad 0242
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad4,Keypad2
+	KeyUp altKey  
+	
+	// Combination to type n-tlide
+	// Alt key +  Num pad 0241
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad4,Keypad1
+	KeyUp altKey  
+	
+	// Combination to type a-diaeresis
+	// Alt key +  Num pad 0228
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad2,Keypad8
+	KeyUp altKey  
+	
+	// Combination to type o-diaeresis
+	// Alt key +  Num pad 0246
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad4,Keypad6
+	KeyUp altKey  
+	
+	// Combination to type u-diaeresis
+	// Alt key +  Num pad 0252
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad5,Keypad2
+	KeyUp altKey  
+	
+	// Combination to type slashed O
+	// Alt key +  Num pad 0248
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad4,Keypad8
+	KeyUp altKey  
+	
+	// Combination to type Beta
+	// Alt key +  Num pad 0223
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad2,Keypad3
+	KeyUp altKey  
+	
+	// Combination to type ash tree
+	// Alt key +  Num pad 0198
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad9,Keypad8
+	KeyUp altKey  
+	
+	// Combination to type c-cedilla
+	// Alt key +  Num pad 0231
+	KeyDown altKey
+	TypeText Keypad0,Keypad2,Keypad3,Keypad1
+	KeyUp altKey  
+	
+	// Combination to type inverted question mark
+	// Alt key +  Num pad 0191
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad9,Keypad1
+	KeyUp altKey  
+	
+	// Combination to type degree symbol
+	// Alt key +  Num pad 0176
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad7,Keypad6
+	KeyUp altKey  
+	
+	// Combination to type plus minus symbol
+	// Alt key +  Num pad 0177
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad7,Keypad7
+	KeyUp altKey  
+	
+	// Combination to type trademark symbol
+	// Alt key +  Num pad 0153
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad5,Keypad3
+	KeyUp altKey  
+	
+	// Combination to type copyright symbol
+	// Alt key +  Num pad 0169
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad6,Keypad9
+	KeyUp altKey  
+	
+	// Combination to type reserved symbol
+	// Alt key +  Num pad 0174
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad7,Keypad4
+	KeyUp altKey  
+	
+	// Combination to type euro currency
+	// Alt key +  Num pad 0128
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad2,Keypad8
+	KeyUp altKey  
+	
+	// Combination to type cent symbol
+	// Alt key +  Num pad 0162
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad6,Keypad2
+	KeyUp altKey  
+	
+	// Combination to type birtish pound
+	// Alt key +  Num pad 0163
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad6,Keypad3
+	KeyUp altKey  
+	
+	// Combination to type japanese yen
+	// Alt key +  Num pad 0165
+	KeyDown altKey
+	TypeText Keypad0,Keypad1,Keypad6,Keypad5
+	KeyUp altKey  
+	
+	// Move the cursor to blank space
+	TypeText return & return 
+	
+	//Numlock via KeyDown,KeyUp
+	(*KeyDown numLock
+	TypeText Keypad0,Keypad1,Keypad2,Keypad4
+	KeyUp numlock
+	TypeText Keypad0,Keypad1,Keypad2,Keypad4
+	
+	// Move the cursor to blank space
+	TypeText return & return 
+	
+	//Numlock via TypeText
+	TypeText Keypad0,Keypad1,Keypad2,Keypad3
+	TypeText numLock
+	TypeText Keypad4
+	
+	// Move the cursor to blank space
+	TypeText return & return*)
+	
+	if ImageFound("Notepad/SpecialCharacter","Notepad/SpecialCharacter")
+		LogSuccess "Notepad shows correct and expected special character"
+		
+	else 
+		LogError "Notepad shows incorrect special character"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Keyboard Shortcut Numpad Special Characters Notepad Test"

@@ -1,0 +1,49 @@
+﻿BeginTestCase  "Free RDP: Keyboard Languages Test"
+--TestRail.C2002672
+
+set maxWait = 5
+
+try
+	
+	Run "Helpers/zoomNotepad".zoomInNotepad maxWait
+	
+	TypeText "Привет как дела", return
+	wait 2
+	assert ImageFound(Text:"Привет как дела", Language:Russian, waitfor: maxWait) with error !"Verify Keyboard Russian Language"
+	
+	TypeText "你好 我的名字是小花", return
+	wait 2
+	assert ImageFound(Text:"你好 我的名字是小花",ignorespaces:On, Language:ChinesePRC, waitfor: maxWait) with error !"Verify Keyboard ChinesePRC Language"
+	
+	TypeText "Hallo wie geht's dir", return
+	wait 2
+	assert ImageFound(Text:"Hallo wie geht's dir", Language: German, waitfor: maxWait) with error !"Verify Keyboard German Language"
+	
+	TypeText "こんにちは、元気ですか", return
+	wait 2
+	assert ImageFound(Text:"こんにちは、元気ですか", Language:Japanese, waitfor: maxWait) with error !"Verify Keyboard Japanese Language"
+	
+	TypeText "안녕하세요방법입니다", return
+	wait 2
+	assert ImageFound(Text:"안녕하세요방법입니다",ignorespaces:On, Language:Korean,waitfor: maxWait) with error !"Verify Keyboard Korean Language"
+	
+	TypeText "שלום מה שלומך", return
+	wait 2
+	assert ImageFound(Text:"שלום מה שלומך",ignorespaces:On, Language: Hebrew, waitfor: maxWait) with error !"Verify Keyboard Hebrew Language"
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	
+	LogError exception    
+	
+end try
+
+EndTestCase  "Free RDP: Keyboard Languages Test"

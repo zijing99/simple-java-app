@@ -1,0 +1,45 @@
+﻿BeginTestCase  "Free RDP: Mouse Double Click Test"
+
+--TestRail.C1727279
+
+set maxWait = 20
+
+try 
+	
+	// Double Click Launch Chrome
+	MoveTo imageName:"Chrome/ChromeIcon", waitFor:maxWait
+	DoubleClick "Chrome/ChromeIcon"
+	
+	// Launch Chrome in expand mode
+	if ImageFound(imageName:"Chrome/ExpandButton", waitFor:3)
+		
+		Click "Chrome/ExpandButton"
+		
+	end if 
+	
+	// Verify Chrome Launch 
+	"Helpers/SUT".waitForText maxWait, "New Tab", "Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+	
+	// Close Chrome
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	// Double Click To Launch Firefox
+	MoveTo imageName:"Firefox/FirefoxIcon", waitFor:maxWait
+	DoubleClick "Firefox/FirefoxIcon"
+	
+	// Verify Firefox Launch
+	"Helpers/SUT".waitForText maxWait, "New Tab"
+	
+	"Helpers/SUT".clickText maxWait, "New Tab"
+	
+	// Close Firefox
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Mouse Double Click Test"

@@ -1,0 +1,57 @@
+﻿--Shift Key Test Function
+
+to shiftDelAndInsTest maxWait
+
+	// Shift Del and Ins
+	// Cut and paste test
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound(imageNametoRead) = false
+		Run "Apps/LaunchNotepad"
+	end if
+	
+	TypeText "Control X test"
+	TypeText ControlKey&a
+	TypeText ShiftKey&DeleteKey
+	TypeText AltKey&F4
+	
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound(imageNametoRead) = false
+		Run "Apps/LaunchNotepad"
+	end if
+	
+	TypeText ShiftKey&InsertKey
+	TypeText return & return 
+	
+end shiftDelAndInsTest
+
+to shiftHomeTest maxWait
+
+	// Shift home
+	// Highlight left from the current cursor 
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound(imageNametoRead) = false
+		Run "Apps/LaunchNotepad"
+	end if
+	
+	TypeText "Shift home test"
+	
+	TypeText Shiftkey&HomeKey 
+	
+	
+end shiftHomeTest
+
+to shiftEndTest maxWait
+
+	// Shift end
+	// Highlight right from the current cursor 
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound(imageNametoRead) = false
+		Run "Apps/LaunchNotepad"
+	end if
+	
+	TypeText "Shift end test"
+	TypeText leftArrow&leftArrow&leftArrow&leftArrow
+	TypeText Shiftkey&EndKey
+	
+	
+end shiftEndTest

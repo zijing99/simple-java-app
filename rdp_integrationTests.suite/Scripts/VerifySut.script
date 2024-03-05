@@ -1,0 +1,23 @@
+﻿BeginTestCase "Free RDP: Verify SUT"
+
+--TestRail.C1727283
+
+-- Check the availability of the remote connection
+set connectionInfoAvailability to ConnectionInfo().Availability
+
+-- If the availability is not connected, throw an error
+if connectionInfoAvailability is empty then
+	throw "No Remote Connection", "Please connect to a SUT and try again"
+end if
+
+-- Get the name of the SUT
+set mysut to ConnectionInfo().name
+
+-- Check the availability status and log the appropriate message
+if connectionInfoAvailability is "Active" then
+	LogSuccess "Connected to " & mysut
+else 
+	LogError "Connection failed to " & mysut
+end if
+
+EndTestCase "Free RDP: Verify SUT"

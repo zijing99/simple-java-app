@@ -1,0 +1,172 @@
+﻿BeginTestCase  "Free RDP: Keyboard Shortcut Windows Alt other Key Test"
+--TypeText AltKey&F 
+--TypeText AltKey&E
+--TypeText AltKey&TabKey
+--TypeText AltKey&ReturnKey
+--TypeText f1
+--TypeText f2
+--TypeText PageDown 
+--TypeText HomeKey
+--TypeText EndKey
+--TypeText WindowKey&X
+--TypeText WindowKey&DownArrow
+--TypeText WindowKey&UpArrow
+--TestRail.C1927481
+
+set maxWait = 5
+
+try
+	set index to 0
+	set searchRectangle="Helpers/screenPart"("Helpers/screenPortions".appWindow)
+	
+	//==========Notepad Test start======== Notepad => Alt E, Alt F=====================================
+	// Launch Notepad
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV"
+	if ImageFound( imageNametoRead) = false		
+		Run "Apps/LaunchNotepad"		
+	end if
+	
+	// Alt E Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".altETest  maxWait	
+	if ImageFound(imageName: "Notepad/EditMenu", waitFor:maxWait)		
+		LogSuccess "The edit menu is shown"		
+	else 		
+		LogError "The edit menu is not shown. Alt E is not working"		
+	end if
+	
+	Click [100,100] -- Move out cursor from menu
+
+	// Alt F Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".altFTest  maxWait
+	
+	if ImageFound(imageName: "Notepad/Exit", waitFor:maxWait)		
+		LogSuccess "The file menu is shown"		
+	else 		
+		LogError "The file menu is not shown. Alt F is not working"
+		
+	end if	
+	
+	Helper.resetAndCloseNotepad maxWait
+	
+	//===========================Notepad Test End============================================
+	
+	//===========Chrome test Start====Alt Tab test==================================================
+	
+	// Alt Tab Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".altTabTest  maxWait	
+	if ImageFound(imageName: "Chrome/ChromeNewTab", waitFor:maxWait)		
+		LogSuccess "The alt tab work"		
+	else 		
+		LogError "The alt tab does not work"	
+	end if
+	
+	//Focus Chrome
+	"Helpers/SUT".clickText maxWait ,"New Tab","Helpers/screenPart"("Helpers/screenPortions".appWindow)
+	
+	TypeText AltKey&F4
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	
+	//===========Chrome test End=============================================================
+	
+	//===========File Explorer test Start======Properties tab ===========================================
+	// Alt Enter Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".altEnterTest maxWait	
+	if ImageFound(text:"EC2 Feedback Properties", waitFor:maxWait)		
+		LogSuccess "The alt Enter work"		
+	else 		
+		LogError "The alt Enter does not work"		
+	end if
+	
+	"Helpers/SUT".clickText maxWait, "Cancel","Helpers/screenPart"("Helpers/screenPortions".bottomHalf)
+	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	//===========File Explorer test End===========================================================
+	
+	// ========F1/F2/F4/Home/End Key===============================================================
+	// F1 Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".F1Test  maxWait	
+	if "Helpers/SUT".findText(maxWait, "Google Chrome Help","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty			
+		LogSuccess "The help page shown"		
+	else 		
+		LogError "The help page does not work"		
+	end if	
+	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	// F2 Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".F2Test maxWait	
+	if ImageFound(imageName: "FileExplorer/WindowGuide", waitFor:maxWait)		
+		LogSuccess "The F2 key work"		
+	else 		
+		LogError "The F2 key does not work"		
+	end if	
+	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	//  Home key test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".HomeTest maxWait	
+	
+	if "Helpers/SUT".findText(maxWait, "KEYSIGHT","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		LogSuccess "The webpage is sucessfully return to home page executed"		
+	else 		
+		LogError "The webpage did not return to home"		
+	end if
+	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	//  End key test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".EndTest maxWait	
+	if "Helpers/SUT".findText(maxWait, "Copyright","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty	
+		LogSuccess "The webpage is sucessfully navigate to end of the page"		
+	else 		
+		LogError "The webpage did not navigate to the end of the page"		
+	end if
+	
+	//======Windows key start test ======================================================
+	
+	//  Window X key Test
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".WindowKeyXTest  maxWait	
+	if "Helpers/SUT".findText(maxWait, "Desktop","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty		
+		LogSuccess "The Window X is executed"		
+	else 		
+		LogError "The Window X is not executed"		
+	end if
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	//  Window Down Arrow Test, minimize current active window
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".WindowKeyDownTest maxWait	
+	if ImageFound(imagename:"Chrome/ExpandButton", waitFor:maxWait)
+		LogSuccess "The Window Down is executed"		
+	else 		
+		LogError "The Window Down is not executed"		
+	end if
+	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	//  Window Up Arrow Test, maximize current active window
+	"KeyboardTest/ShortcutWindowsAltOtherKeyFunction".WindowKeyUpTest maxWait	
+	if ImageFound(imagename: "Chrome/restoreDownIcon", waitFor:maxWait)		
+		LogSuccess "The Window Up is executed"		
+	else		
+		LogError "The Window Up is not executed"		
+	end if	
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	//======Windows key start End ======================================================
+	
+catch exception
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+
+EndTestCase  "Free RDP: Keyboard Shortcut Windows Alt other Key Test"
+
+
+
+
+
+
+

@@ -1,0 +1,3 @@
+﻿BeginTestCase  "Free RDP: Keyboard Alphabetical Test"
+Run "KeyboardTest/AlphabeticalNotepadTest"
+EndTestCase "Free RDP: Keyboard Alphabetical Test"

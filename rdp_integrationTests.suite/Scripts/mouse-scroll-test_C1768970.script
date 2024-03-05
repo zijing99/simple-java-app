@@ -1,0 +1,6 @@
+﻿BeginTestCase "RDP: MouseScrollTest"
+
+Run "MouseTest/MouseScrollUpDownTest"
+Run "MouseTest/MouseScrollSpeedTest"
+
+EndTestCase "RDP: MouseScrollTest"

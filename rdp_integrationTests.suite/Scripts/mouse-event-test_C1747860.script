@@ -1,0 +1,10 @@
+﻿BeginTestCase "RDP: Mouse Event Test"
+
+--TestRail.C1747860
+
+Run "LeftRightClickDesktopTest"
+Run "MouseDoubleClickTest"
+Run "MouseMiddleClickTest"
+Run "MouseDragHoldReleaseTest"
+
+EndTestCase "RDP: Mouse Event Test"

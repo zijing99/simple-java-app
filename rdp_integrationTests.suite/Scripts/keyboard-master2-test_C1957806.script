@@ -1,0 +1,5 @@
+﻿BeginTestCase "Keyboard ShortCutKey group test"
+Run "keyboard-shortcutKeyWithMouse-test_C1960742"
+Run "keyboard-shortcutWindowsAltOtherKey-test_C1927481"
+Run "keyboard-shortcutControlKey-test_C1927480"
+EndTestCase "Keyboard ShortCutKey group test"

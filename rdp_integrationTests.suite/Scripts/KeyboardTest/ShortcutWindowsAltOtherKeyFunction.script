@@ -1,0 +1,147 @@
+﻿--Windows Key, Alt Key, Other Key Test Function
+
+to altFTest maxWait
+	// Alt+ F test
+	// Open file menu option	
+	TypeText AltKey&F 
+	
+end altFTest 
+
+to altETest maxWait
+	// Alt + E test
+	// Edit menu 	
+	TypeText AltKey&E
+	
+end altETest 
+
+to altTabTest maxWait
+
+	// Alt + tab test
+	// Switch window
+	Run "Apps/LaunchChrome","Maximize"
+	
+	WaitFor maxWait, "Chrome/ChromeNewTab"
+	
+	set imageNametoRead = "Notepad/UntitledNotepadFileEditFormatV" 
+	if ImageFound( imageNametoRead) = false		
+		Run "Apps/LaunchNotepad"		
+	end if
+	
+	WaitFor maxWait, "Notepad/UntitledNotepadFileEditFormatV"
+	
+	TypeText AltKey&TabKey	
+	
+end altTabTest 
+
+to altEnterTest maxWait
+
+	// Alt + enter test
+	// Properties tab
+	Run "Apps/LaunchExplorer","Maximize"
+	
+	Click {imageName:"Desktop/Explorer/DesktopIconText"}
+	WaitFor maxWait, text:"EC2 Feedback"
+	Click {text:"EC2 Feedback"}
+
+	TypeText AltKey&ReturnKey
+	
+end altEnterTest 
+
+to F1Test maxWait
+
+	// F1 key test
+	// Help info
+	Run "Apps/LaunchChrome","Maximize"
+	
+	WaitFor maxWait, "Chrome/ChromeNewTab"
+	
+	TypeText f1
+	
+end F1Test
+
+to F2Test maxWait
+
+	//  F2 key test
+	//  Rename 
+	Run "Apps/LaunchExplorer","Maximize"
+	
+	Click {imageName:"Desktop/Explorer/DesktopIconText"}
+	Click {text:"EC2 Microsoft Windows Guide"}
+
+	TypeText f2
+	
+	
+end F2Test
+
+to HomeTest maxWait
+
+	// Home test
+	// Return to Home test
+	Run "Apps/LaunchChrome","Maximize"
+	
+	WaitFor maxWait, "Chrome/ChromeNewTab"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	TypeText PageDown 
+	TypeText HomeKey
+	
+	
+end HomeTest
+
+to EndTest maxWait
+
+	// End test
+	// Return to End test
+	Run "Apps/LaunchChrome","Maximize"
+	
+	WaitFor maxWait, "Chrome/ChromeNewTab"
+	
+	enterURL ("https://docs.eggplantsoftware.com")
+	
+	"Helpers/SUT".waitForText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".appWindow) by name
+	
+	TypeText EndKey
+	
+end EndTest
+
+to WindowKeyXTest maxWait
+
+	//  Window X key test
+	TypeText windowsKey&"x"
+	
+end WindowKeyXTest
+
+to WindowKeyDownTest  maxWait
+
+	//  Window down key test
+	Run "Apps/LaunchChrome","Maximize"
+	WaitFor maxWait, "Chrome/ChromeNewTab"
+	TypeText windowsKey&DownArrow
+	
+end WindowKeyDownTest
+
+to WindowKeyUpTest maxWait
+	
+	//  Window up key test
+	Run "Apps/LaunchChrome"
+	
+	TypeText windowsKey&UpArrow
+	
+end WindowKeyUpTest
+
+to enterURL (urlName)
+
+	//  Enter URL
+	WaitFor 5, "Chrome/ChromeNewTab"
+	TypeText controlKey, "l"
+	TypeText controlKey, "a"
+	TypeText backspace
+	TypeText urlName
+	TypeText return 
+	
+end enterURL
+
+

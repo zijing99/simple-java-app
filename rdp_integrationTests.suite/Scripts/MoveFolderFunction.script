@@ -1,0 +1,9 @@
+﻿function moveFolderHoldRelease(imageName,endCoor)
+
+	DoubleClick imageName
+	MoveTo imageName
+	MouseButtonDown 1
+	MoveTo endCoor
+	MouseButtonUp 1
+	
+end moveFolderHoldRelease

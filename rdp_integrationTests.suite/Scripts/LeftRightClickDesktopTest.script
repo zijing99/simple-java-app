@@ -1,0 +1,71 @@
+﻿BeginTestCase  "Free RDP: Mouse Left Right Click Test"
+
+--TestRail.C1727278
+
+set imageToTest = "Chrome/ChromeIcon"
+set maxWait = 5
+
+try
+	
+	--ensure desktop is shown with recycle bin icon. 
+	--image based click test
+	
+	--ensure recycleBin icon is not selected. 
+	if ImageFound(imageToTest)
+		MoveTo ImageLocation(imageToTest)+[100,0]
+		Click MouseLocation()
+	end if
+	
+	--to test left and right click on desktop. 
+	RightClick imageToTest
+	if ImageFound("Desktop/Open_RightClickView")
+		Click "Desktop/Open_RightClickView"
+		"Helpers/SUT".assertTextFound maxWait, "New Tab", "Chrome Launched","Helpers/screenPart"("Helpers/screenPortions".topLeft)
+	else
+		CaptureScreen {Name: "Error for RightClick Test Google Chrome"}
+		logWarning "Unable to open recycle bin"
+	end if
+	
+	--close Google Chrome
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	--double click test on left click
+	
+	"Helpers/SUT".doubleClickText maxWait, "Recycle Bin", "Helpers/screenPart"("Helpers/screenPortions".topLeft)
+	
+	if ImageFound(imageName:"Desktop/RecycleBinProperties", waitFor: maxWait)
+		
+		LogSuccess "Recycle Bin Launched for round"
+	else
+		
+		LogWarning "Unable to open recycle bin for round"
+		
+	end if
+	
+	
+	--right click test with OCR
+	RightClick text:"Desktop",SearchRectangle:ImageRectangle("Desktop/JTQuickaccessDesktopDocumentsD")
+	
+	Click Text:"Properties",SearchRectangle:ImageRectangle("Desktop/DeleteRenameProperties")
+	
+	if ImageFound("Desktop/DesktopProperties_Title")
+		
+		LogSuccess "Right click OCR on desktop success for round"
+		click "Desktop/CancelButton"
+	else
+		
+		LogError "Fail to right click OCR on desktop for round"
+		CaptureScreen {Name: "Error for ClickPropertiesOCRTestResult"}
+	end if
+	
+	// Close the file explorer
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Mouse Left Right Click Test"

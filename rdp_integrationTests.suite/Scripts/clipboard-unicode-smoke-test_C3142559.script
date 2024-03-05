@@ -1,0 +1,4 @@
+﻿BeginTestCase  "Free RDP: Clipboard Unicode Smoke Test"
+Run "ClipboardTest/ClipboardUnicodeSmokeTest"
+EndTestCase "Free RDP: Clipboard Unicode Smoke Test"
+

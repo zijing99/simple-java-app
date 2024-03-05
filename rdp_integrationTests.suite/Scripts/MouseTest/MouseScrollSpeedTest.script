@@ -1,0 +1,68 @@
+﻿BeginTestCase "RDP: ScrollSpeedTest"
+
+set roundCount  = 0
+set passCount = 0
+set failCount = 0
+set maxWait = 5
+set imgName to "TestBench/greenBox"
+
+try 
+	
+	MoveTo imageName:"Chrome/chromeIcon", waitFor:maxWait
+	DoubleClick "Chrome/chromeIcon"
+	
+	// Launch Chrome in expand mode
+	if ImageFound(imageName:"Chrome/ExpandButton", waitFor:maxWait)
+		
+		Click "Chrome/ExpandButton"
+		
+	end if 
+	
+	TestBench.Launch "Image Finding"
+	
+	-- scroll down --
+	Put ImageLocation(imgName).y - 100 into predictY
+	repeat until TestBench.BottomOfPage 
+		ScrollWheelDown 1
+		if ImageLocation(imgName).y is predictY
+			Log "ScrollWheelDown executed"&&repeatIndex()&&"time(s)"
+			Put ImageLocation(imgName).y - 100 into predictY
+		else
+			ScrollWheelDown 1
+			if  TestBench.BottomOfPage 
+				LogSuccess "Scroll speed test passed, all expected Y positions hit until bottom of the page."
+			else
+				LogWarning "Scroll speed test failed, target image not found at Y position. Expected:"&&predictY&&"Actual:"&&ImageLocation(imgName).y
+				Exit repeat
+			end if
+		end if
+	end repeat
+	
+	-- scroll up --
+	Put ImageLocation(imgName).y + 100 into predictY
+	repeat until TestBench.TopOfPage
+		ScrollWheelUp 1
+		if ImageLocation(imgName).y is predictY
+			Log "ScrollWheelUp executed"&&repeatIndex()&&"time(s)"
+			Put ImageLocation(imgName).y + 100 into predictY
+		else
+			ScrollWheelUp 1
+			if   TestBench.TopOfPage 
+				LogSuccess "Scroll speed test passed, all expected Y positions hit until top of the page."
+			else
+				LogWarning "Scroll speed test failed, target image not found at Y position. Expected:"&&predictY&&"Actual:"&&ImageLocation(imgName).y
+				Exit repeat
+			end if
+		end if
+	end repeat
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "RDP: ScrollSpeedTest"

@@ -1,0 +1,24 @@
+﻿--to launch chrome
+params size
+Set maxwait=5
+
+TypeText WindowsKey, "r"
+TypeText "chrome.exe", enterKey
+
+if imagefound(imageName:"Chrome/ChromeNewTab",waitFor:maxwait)	
+	
+	if size is not "Maximize"
+		if imagefound(imageName:"Chrome/restoreDownIcon",waitFor:maxwait)
+			click "Chrome/restoreDownIcon"
+		end if	
+	else
+		//alt, space , X will maximize windows
+		TypeText altKey, spacebar
+		TypeText x
+		WaitFor maxwait, imageName:"Chrome/restoreDownIcon", SearchRectangle:"Helpers/screenPart"("Helpers/screenPortions".topRight)
+	end if
+	
+	LogSuccess "Chrome launched."
+else
+	LogError "Unable to launch Chrome."
+end if

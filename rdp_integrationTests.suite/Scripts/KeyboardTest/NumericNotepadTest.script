@@ -1,0 +1,45 @@
+﻿BeginTestCase  "Free RDP: Keyboard Numeric Notepad Test"
+--TypeText 0-9
+--TestRail.C1938076
+
+set maxWait = 5 -- Why need maxWait
+
+try
+	--set imageNameToRead = "Notepad/UntitledNotepadFileEditFormatV"
+	--if ImageFound( imageNameToRead) = false
+	Run "Apps/LaunchNotepad"
+	--end if
+	
+	set index to 0    
+	
+	repeat until index > 9
+		
+		typetext " " &index& " "
+		wait 0.6 -- giving some wait time for the image processing after index writen
+		
+		"Helpers/SUT".assertTextFound maxWait, index, "Verify notepad shows correct value","Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+		
+		put index + 1 into index
+		TypeText controlKey&a
+		TypeText backspace
+		
+	end repeat
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	
+	LogError exception
+	
+end try
+
+EndTestCase "Free RDP: Keyboard Numeric Notepad Test"
+

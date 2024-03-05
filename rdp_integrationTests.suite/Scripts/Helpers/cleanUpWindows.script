@@ -1,0 +1,21 @@
+﻿to cleanWindows maxWait
+	
+	TypeText altKey&F4
+	
+	// Is not empty = is true
+	// Is empty = is false
+	if "Helpers/SUT".findText(5, "Recycle Bin","Helpers/screenPart"("Helpers/screenPortions".topLeft)) is not empty then 
+		
+		LogSuccess "Browser is successfully closed"
+		
+	else if "Helpers/SUT".findText(5, "Recycle Bin","Helpers/screenPart"("Helpers/screenPortions".topLeft)) is empty then 
+		
+		run "Helpers/resetSUT".cleanWindows maxWait
+		
+	end if
+	
+	set SearchRectangle to empty
+	
+end cleanWindows
+
+

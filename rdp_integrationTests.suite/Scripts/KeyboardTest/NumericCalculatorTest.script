@@ -1,0 +1,125 @@
+﻿BeginTestCase  "Free RDP: Keyboard Numeric Calculator Test"
+--TypeText 0-9, *, +, -, /
+--TestRail.C1938075
+
+try
+	if imageFound("Calculator/JCalculViewEditHelp") = false
+		Run "Apps/LaunchCalculator"
+	end if
+	
+	
+	if ImageFound("Calculator/calculatorDisplay") = false
+		Click "Calculator/clearButtonCalc"
+		Click "Calculator/JCalculViewEditHelp"
+	end if
+	
+	--use keyboard input to key in digits on calculator apps. 
+	set index to 0
+	set imageNameToRead = "Calculator/JCalculViewEditHelp"
+	--to get current digit display in calc display. 
+	put the left of ImageRectangle(imageNameToRead) into actualLeft
+	put the top of ImageRectangle(imageNameToRead) into actualTop
+	
+	put the bottom of ImageRectangle(imageNameToRead)  into actualBottom
+	put the right of ImageRectangle(imageNameToRead) into actualRight
+	
+	set readsize to 60
+	
+	
+	//Verify digits keyboard combination with multiply (*)
+	//reset index to 0
+	set index to 0
+	
+	repeat until index > 2
+		TypeText index&keypadTimes&index&return
+		set calResult to index * index
+		
+		if calResult is not ReadText(["Calculator/CalculatorDisplay_A","Calculator/CalculatorDisplay_B"],enhanceLocalContrast:on, enableaggressivetextextraction:on)    
+			LogError "Calc show incorrect multiplication value"&&calResult
+			
+		else
+			LogSuccess "Calc show correct multiplication value"&&calResult
+			
+		end if
+		
+		Click "Calculator/clearButtonCalc"
+		Click "Calculator/JCalculViewEditHelp"
+		put index + 1 into index
+		
+	end repeat
+	
+	//Verify digits keyboard combination with addition (+)
+	//reset index to 0
+	set index to 0
+	
+	repeat until index > 2
+		TypeText index&keypadPlus&index&return
+		set calResult to index + index
+		
+		if calResult is not ReadText(["Calculator/CalculatorDisplay_A","Calculator/CalculatorDisplay_B"],enhanceLocalContrast:on, enableaggressivetextextraction:on)    
+			LogError "Calc show incorrect addition value"&&calResult
+			
+		else
+			LogSuccess "Calc show correct addition value"&&calResult
+			
+		end if
+		
+		Click "Calculator/clearButtonCalc"
+		Click "Calculator/JCalculViewEditHelp"
+		put index + 1 into index
+		
+	end repeat
+	
+	//Verify digits keyboard combination with subtraction (-)
+	//reset index to 0
+	set index to 0
+	
+	repeat until index > 2
+		TypeText "10"&keypadMinus&index&return
+		set calResult to 10 - index
+		
+		if calResult is not ReadText(["Calculator/CalculatorDisplay_A","Calculator/CalculatorDisplay_B"],enhanceLocalContrast:on, enableaggressivetextextraction:on)    
+			LogError "Calc show incorrect subtraction value"&&calResult
+			
+		else
+			LogSuccess "Calc show correct subtraction value"&&calResult
+			
+		end if
+		
+		Click "Calculator/clearButtonCalc"
+		Click "Calculator/JCalculViewEditHelp"
+		put index + 1 into index
+		
+	end repeat
+	
+	//Verify digits keyboard combination with division (/)
+	//reset index to 1
+	set index to 1
+	
+	repeat until index > 2 
+		TypeText index&keypadDivide&index&return
+		set calResult to index / index
+		
+		if calResult is not ReadText(["Calculator/CalculatorDisplay_A","Calculator/CalculatorDisplay_B"],enhanceLocalContrast:on, enableaggressivetextextraction:on)    
+			LogError "Calc show incorrect division value"&&calResult
+			
+		else
+			LogSuccess "Calc show correct division value"&&calResult
+			
+		end if
+		
+		Click "Calculator/clearButtonCalc"
+		Click "Calculator/JCalculViewEditHelp"
+		put index + 1 into index
+		
+	end repeat
+	typeText altKey&F4
+	
+catch exception 
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+end try
+
+
+
+EndTestCase "Free RDP: Keyboard Numeric Calculator Test"

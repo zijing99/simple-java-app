@@ -1,0 +1,129 @@
+﻿BeginTestCase  "Longevity Test"
+
+--TestRail.C1952469
+
+set imageNameToRead = "Notepad/UntitledNotepadFileEditFormatV"
+set maxWait = 5
+set testCycle = 0
+
+try
+	put the seconds into startSeconds
+	put the long date into startDate
+	put the time into startTime
+	put the time - startTime into secondsElapsed
+	
+	//Repeat for 24 hours = 86400 secs
+	Repeat while secondsElapsed < 86400
+		
+		Run "Apps/LaunchNotepad"	
+		
+		//Keyboard
+		set currentAlphabet = "longevity keyboard is still working"
+		CheckTextWritten currentAlphabet
+		Helper.clearNotePadText maxWait
+		run "Helpers/resetSUT".cleanWindows maxWait
+		
+		set testCycle = testCycle + 1
+		put the time - startTime into secondsElapsed
+		logElapsedTime startSeconds, startDate, startTime, testCycle, maxWait
+		
+	End Repeat
+	
+	logElapsedTime startSeconds, startDate, startTime, testCycle, maxWait
+	
+catch exception
+
+	logElapsedTime startSeconds, startDate, startTime, testCycle, maxWait
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogWarning exception
+	
+end try
+
+
+//Function to calculate elapse time and display longevity test duration
+to logElapsedTime startSeconds, startDate, startTime, testCycle, maxWait
+
+	put the seconds - startSeconds into elapsedSecondsRaw
+	
+	set elapsedHour = 0
+	set elapsedMinuteRaw = 0
+	set elapsedMinute = 0
+	set elapsedSecond = 0
+	
+	//Convert sec to min if it is greater than 60
+	if elapsedSecondsRaw >= 60 then
+		put elapsedSecondsRaw div 60  into elapsedMinuteRaw
+		put elapsedSecondsRaw modulo 60 into elapsedSecond
+	else
+		set elapsedSecond = elapsedSecondsRaw
+	end if
+	
+	//Convert min to hour if it is greater than 60
+	if elapsedMinuteRaw >= 60 then
+		put elapsedMinuteRaw div 60 into elapsedHour
+		put elapsedMinuteRaw modulo 60 into elapsedMinute
+	else
+		set elapsedMinute = elapsedMinuteRaw
+	end if
+	
+	//Print out elapse time, start date/time, end date/time and test cycle
+	log elapsedHour&&"hours"&&elapsedMinute&&"minutes"&&elapsedSecond&&"seconds"
+	log "Total test cycle: "&testCycle
+	log "Start DateTime:"&&startDate&&startTime
+	put the long date into endDate
+	put the time into endTime
+	log "End DateTime:"&&endDate&&endTime
+	
+	//Workaround of restart Windows Explorer for windows rendering problem caused by GDI count hits limit at 10 hours of running
+	//Estimation of restart Windows Explorer in 8 hours or 16 hours
+	//if elapsedHour = 8 or elapsedHour = 16 then
+	if testCycle = 1100 or testCycle = 2200 then
+		Log "Restart Windows Explorer"
+		RestartWindowsExplorer maxWait
+	else
+		Log "Continue longevity test"
+	end if
+	
+end logElapsedTIme
+
+//Function to check alphabets entered using keyboard
+to CheckTextWritten currentAlphabet
+	typetext currentAlphabet
+	typetext return
+	typetext return
+	
+	assert imageFound(text:currentAlphabet, WaitFor:5) with warning !"Verify alphabets entered in notepad correctly"
+	
+end CheckTextWritten
+
+
+//Workaround for windows rendering problem due to GDI hits limit - restart Windows Explorer function 
+to RestartWindowsExplorer maxWait
+	
+	TypeText WindowsKey, "r"
+	TypeText "cmd", returnKey
+	
+	If ImageFound(imageName:"CommandPrompt/CommandPrompt", waitFor:maxWait)
+		
+		TypeText altKey,spacebar
+		TypeText x
+		wait maxWait -- UI needs to be settled down
+		
+		//Restart explorer.exe based on the username login
+		//Command line: taskkill /F /FI "USERNAME eq Administrator" /IM explorer.exe & start explorer
+		TypeText "taskkill /F /FI"&&quote&"USERNAME eq Administrator"&quote&&"/IM explorer.exe & start explorer", returnKey
+		
+		wait maxWait
+		
+		LogSuccess "Windows Explorer restarted successfully"
+	else
+		LogWarning "Fail to launch Command Prompt and restart Windows Explorer"
+	end if
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	
+end RestartWindowsExplorer
+
+
+
+EndTestCase "Longevity Test"

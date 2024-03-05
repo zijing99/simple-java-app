@@ -1,0 +1,17 @@
+﻿
+(**
+Gets the coordinates of a portion of the screen based on the remoteScreenSize
+@param coordinatesList- a list in format ((X0, Y0),(X1, Y1))**)
+
+params coordinatesList
+
+if coordinatesList is empty then
+	
+	throw "Parameter error", coordinatesList && "is not a recognized screen portion."
+	
+end if
+
+return (the remoteScreenSize,the remotescreenSize) * coordinatesList
+
+log coordinatesList
+

@@ -1,0 +1,415 @@
+﻿BeginTestCase  "Free RDP: Keyboard Shortcut Control Key Test"
+
+--TypeText ControlKey&d
+--TypeText ControlKey&n
+--TypeText ControlKey&o
+--TypeText ControlKey&A
+--TypeText ControlKey&B
+--TypeText ControlKey&I
+--TypeText ControlKey&U
+--TypeText ControlKey&f
+--TypeText ControlKey&p
+--TypeText ControlKey&s
+--Typetext ControlKey&k
+--TypeText ControlKey&x
+--TypeText ControlKey&v
+--TypeText ControlKey&c
+--TypeText ControlKey&y
+--TypeText ControlKey&z
+--TypeText ControlKey&InsertKey
+--TypeText ControlKey&HomeKey
+--TypeText ControlKey&EndKey
+--TypeText ControlKey&leftArrow
+--TypeText ControlKey&rightArrow
+--TypeText ControlKey&L, backspace
+--TypeText EscapeKey
+--TypeText PageDown 
+--TypeText Backspace
+--TypeText AltKey&F4
+--TypeText return
+--TestRail.C1927480
+
+
+set maxWait = 5
+
+try
+	
+	// Bookmark test ===> Control + D
+	"KeyboardTest/ShortcutControlKeyFunction".bookmarkTest maxWait
+	
+	if "Helpers/SUT".findText(maxWait, "Bookmark added","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		Click imagename:"Chrome/BookmarkEdit", WaitFor: maxWait
+		Click imagename:"Chrome/BookmarkRemove", WaitFor: maxWait
+		LogSuccess "The bookmark added bar is shown"
+		
+	else if "Helpers/SUT".findText(maxWait, "Edit bookmark","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		Click imagename:"Chrome/BookmarkRemove", WaitFor: maxWait
+		LogSuccess "The bookmark added bar is shown"
+		
+	else
+		
+		LogWarning "The bookmark added bar is not shown"
+		
+	end if
+	
+	// Chrome New tab test
+	TypeText ControlKey&n
+	
+	// Verify Chrome Launch 
+	"Helpers/SUT".waitForText maxWait, "New Tab", "Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+	
+	TypeText AltKey&F4
+	
+	// Close Chrome
+	run "Helpers/cleanUpWindows".cleanWindows  maxWait
+	
+	// Notepad new save test
+	"KeyboardTest/ShortcutControlKeyFunction".notepadNewSaveTest maxWait
+	
+	if ImageFound(imageName: "Notepad/DontSaveNotepad", waitFor:maxWait)
+		
+		LogSuccess "The control N shortcut successfully executed on Notepad"
+		
+	else 
+		
+		LogError "The control N shortcut did not executed on Notepad"
+		
+	end if
+	
+	Click "Notepad/DontSaveNotepad"
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+	// Select all test
+	"KeyboardTest/ShortcutControlKeyFunction".selectAllTest maxWait
+	
+	if ImageFound(imageName:"Notepad/SelectAll", waitFor:maxWait)
+		
+		LogSuccess "The control A is sucessfully executed"
+		
+	else 
+		
+		LogError "The control A is not executed"
+		
+	end if
+	
+	TypeText Backspace
+	// Open file window test 
+	"KeyboardTest/ShortcutControlKeyFunction".openFileWindowTest maxWait
+	
+	if ImageFound(imageName: "Notepad/OpenWindow", waitFor:maxWait)
+		
+		LogSuccess "The open file window is shown on Notepad"
+		
+	else 
+		
+		LogError "The open file window did not shown on Notepad"
+		
+	end if
+	
+	Click "Notepad/CancelSave"
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	// Bold text wordpad test
+	"KeyboardTest/ShortcutControlKeyFunction".textBoldTest maxWait
+	
+	if ImageFound(imageName:"Wordpad/ControlKeyTest/ControlBtest", waitFor:maxWait)
+		
+		LogSuccess "The control B is sucessfully executed"
+		
+	else 
+		
+		LogError "The control B is not executed"
+		
+	end if
+	
+	TypeText controlKey,"a"
+	TypeText Backspace	
+	TypeText AltKey&F4
+	Click "Notepad/DontSaveNotepad"
+	
+	// Italic text wordpad test
+	"KeyboardTest/ShortcutControlKeyFunction".textItalicTest maxWait
+	
+	if ImageFound(imageName:"Wordpad/ControlKeyTest/ControlITest", waitFor:maxWait)		
+		LogSuccess "The control I is sucessfully executed"		
+	else 		
+		LogError "The control I is not executed"		
+	end if
+	
+	TypeText controlKey,"a"
+	TypeText Backspace
+	TypeText AltKey&F4
+	Click "Notepad/DontSaveNotepad"
+	
+	// Underline text wordpad test
+	"KeyboardTest/ShortcutControlKeyFunction".textUnderlineTest maxWait
+	
+	if ImageFound(imageName:"Wordpad/ControlKeyTest/ControlUTest", waitFor:maxWait)		
+		LogSuccess "The control U is sucessfully executed"		
+	else 		
+		LogError "The control U is not executed"		
+	end if
+	
+	TypeText controlKey,"a"
+	TypeText Backspace	
+	TypeText AltKey&F4
+	Click "Notepad/DontSaveNotepad"
+	
+	
+	//  File explorer search test
+	"KeyboardTest/ShortcutControlKeyFunction".searchTest maxWait	
+	
+	if ImageFound(text:"Search", waitFor:maxWait)		
+		LogSuccess "The control F is sucessfully executed"		
+	else 
+		LogError "The control F is not executed"		
+	end if
+	
+	TypeText AltKey&F4
+	
+	
+	//  Notepad saving test
+	"KeyboardTest/ShortcutControlKeyFunction".savingTest maxWait
+	
+	if ImageFound(text:"Save As", waitFor:maxWait)
+		
+		LogSuccess "The control S is sucessfully executed"
+		
+	else 
+		
+		LogError "The control S is not executed"
+		
+	end if
+	
+	click "Notepad/CancelSave"
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+	// Notepad cut and paste test
+	"KeyboardTest/ShortcutControlKeyFunction".cutAndPasteTest maxWait
+	
+	if ImageFound(imageName:"Notepad/ControlXtest",waitFor:maxWait)
+		
+		LogSuccess "The control X and V is sucessfully executed"
+		
+	else 
+		
+		LogError "The control X and V is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+	// Notepad copy and paste text test
+	"KeyboardTest/ShortcutControlKeyFunction".copyTextTest maxWait
+	
+	if ImageFound(imageName:"Notepad/ControlCTest", waitFor:maxWait)
+		
+		LogSuccess "The control C is sucessfully executed"
+		
+	else 
+		
+		LogError "The control C is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+	//Insert Test
+	"KeyboardTest/ShortcutControlKeyFunction".insCopyTextTest maxWait,roundCount, testCount, passCount, failCount 
+	
+	if ImageFound(imageName:"Notepad/ControlINSTest", waitFor:maxWait)
+		
+		LogSuccess "The control INS is sucessfully executed"
+		
+	else 
+		
+		LogError "The control INS is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	//  Undo and redo Test
+	"KeyboardTest/ShortcutControlKeyFunction".undoAndRedoTest maxWait
+	
+	if ImageFound(imageName:"Wordpad/UndoAndRedoTest", waitFor:maxWait)
+		
+		LogSuccess "The undo and redo test is sucessfully executed"
+		
+	else 
+		
+		LogError "The undo and redo test is not executed"
+		
+	end if
+	TypeText ControlKey&A
+	TypeText Backspace
+	
+	TypeText AltKey&F4
+	Click "Notepad/DontSaveNotepad"
+	
+	
+	//  Hyperlink Test
+	"KeyboardTest/ShortcutControlKeyFunction".hyperlinkTest maxWait
+	
+	if ImageFound(imageName:"Chrome/SearchGoogle", waitFor:maxWait)
+		
+		LogSuccess "The hyperlink test is sucessfully executed"
+		
+	else 
+		
+		LogError "The hyperlink test is not executed"
+		
+	end if
+	
+	TypeText AltKey&F4
+	
+	
+	//  Print Test
+	"KeyboardTest/ShortcutControlKeyFunction".printCurrentPageTest maxWait
+	
+	if "Helpers/SUT".findText(maxWait, "Print","Helpers/screenPart"("Helpers/screenPortions".bottomRight)) is not empty
+		LogSuccess "The print test is sucessfully executed"
+	else 
+		
+		LogError "The print test is not executed"
+		
+	end if
+	
+	TypeText AltKey&F4
+	
+	
+	//  Return to home test
+	"KeyboardTest/ShortcutControlKeyFunction".returnToHomeTest maxWait
+	
+	if "Helpers/SUT".findText(maxWait, "KEYSIGHT","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		LogSuccess "The webpage is sucessfully return to home page executed"
+		
+	else 
+		
+		LogError "The webpage did not return to home"
+		
+	end if
+	
+	TypeText AltKey&F4
+	
+	//  Navigate to end of webpage test
+	"KeyboardTest/ShortcutControlKeyFunction".goToEndTest maxWait
+	
+	
+	if "Helpers/SUT".findText(maxWait, "Copyright","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		LogSuccess "The webpage is sucessfully navigate to end of the page"
+		
+	else 
+		
+		LogError "The webpage did not navigate to the end of the page"
+		
+	end if
+	
+	TypeText AltKey&F4
+	
+	
+	// Notepad move one word to the left test
+	"KeyboardTest/ShortcutControlKeyFunction".controlLeftTest maxWait
+	
+	if ImageFound(imageName:"Notepad/ControlLeftTest", waitFor:maxWait)
+		
+		LogSuccess "The control left key is sucessfully executed"
+		
+	else 
+		
+		LogError "The control left key is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	// Notepad move one word to the right test
+	"KeyboardTest/ShortcutControlKeyFunction".controlRightTest maxWait
+	
+	
+	if ImageFound(imageName:"Notepad/ControlRightTest", waitFor:maxWait)
+		
+		LogSuccess "The control right key is sucessfully executed"
+		
+	else 
+		
+		LogError "The control right key is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+	// To test control ESC key
+	TypeText ControlKey&escapeKey
+	
+	if ImageFound(imageName:"Desktop/DesktopSideList", waitFor:maxWait)
+		
+		LogSuccess "The desktop side list is shown"
+		
+	else 
+		
+		LogError "The desktop side list is not shown"
+		
+	end if 
+	
+	// Task manager test
+	TypeText ControlKey&ShiftKey&EscapeKey
+	
+	if imagefound("Chrome/ExpandButton")
+		
+		Click "Chrome/ExpandButton"
+		
+	end if
+	
+	
+	if ImageFound(Text:"Task Manager", waitFor:maxWait)
+		
+		LogSuccess "The task manager is shown"
+		
+	else 
+		
+		LogError "The task manager is not shown"
+		
+	end if
+	
+	TypeText AltKey&F4
+	
+	set SearchRectangle to empty
+	
+	
+	catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+
+EndTestCase  "Free RDP: Keyboard Shortcut Control Key Test"

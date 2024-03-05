@@ -1,0 +1,22 @@
+﻿to Launch page
+
+	TypeText "eggplantsoftware.gitlab.io/products/epf/testbenchpages/test_bench_image_finding.html"
+	TypeText returnKey
+	
+	if page is "Image Finding"
+		
+		WaitFor 10, "TestBench/imageFindingPageLink"
+		MoveTo ImageLocation("TestBench/imageFindingPageLink")
+		Click ImageLocation("TestBench/imageFindingPageLink")
+		
+	end if
+	
+end Launch
+
+function TopOfPage
+	return  ImageFound(1, text:"Test Bench:") 
+end  TopOfPage
+
+function BottomOfPage
+	return  ImageFound(1, text:"bottom of the page") 
+end BottomOfPage

@@ -1,0 +1,48 @@
+﻿//Tesrail.TestCase:  C1952470
+BeginTestCase "RDP: Keyboard smoke test"
+
+Log openApplication("notepad")
+
+TypeText "a", "b","c"
+if ImageFound("keyboard/searchText")
+	LogSuccess "Found text.Keyboard unicode is working."
+else
+	LogError "No text found. Keyboard unicode is not working."
+	
+end if
+
+// Test on modifier key
+TypeText controlKey&a
+TypeText deleteKey
+
+if not ImageFound("keyboard/searchText")
+	LogSuccess "Text deleted. Modifier key is working"
+else
+	LogError "Text found. Modifier key is not working."
+	
+end if
+
+
+Log terminateApplication("notepad")
+
+EndTestCase "RDP: Keyboard smoke test"
+
+function openApplication(applicationName)
+	// kill the application first, in case previously didnt kill process
+	TypeText WindowsKey, "r"
+	Wait 2
+	typetext "taskkill /im " &applicationName& ".exe", enterKey
+	// open the application
+	TypeText WindowsKey, "r"
+	wait 2
+	TypeText applicationName & ".exe", enterKey
+end openApplication
+
+
+function terminateApplication(applicationName)
+	TypeText WindowsKey, "r"
+	Wait 2
+	typetext "taskkill /im " &applicationName& ".exe"
+	typetext return
+end terminateApplication
+

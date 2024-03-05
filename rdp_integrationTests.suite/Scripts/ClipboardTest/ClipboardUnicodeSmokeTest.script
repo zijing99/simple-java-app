@@ -1,0 +1,82 @@
+﻿BeginTestCase  "Free RDP: Clipboard Unicode Smoke"
+--SetRemoteClipboard the time
+--Log RemoteClipboard()
+--TypeText ControlKey & V
+--TestRail.C2266270
+
+set maxWait = 5 
+
+try
+	
+	//Launch Notepad
+	Run "Apps/LaunchNotepad"
+	
+	//Sends the current system time to the SUT clipboard
+	setremoteClipboard the time
+	Log remoteclipboard() 
+	
+	//Verify get clipboard content
+	assert the remoteClipboard is the time with error !"Verify get RemoteClipboard"
+	
+	//Set remote clipboard to new text content
+	put "你好 我的名字是小花" into newText
+	setremoteClipboard newText
+	
+	//Sends the keystrokes to the SUT to carry out the paste action
+	TypeText ControlKey & V, return
+	
+	assert ImageFound(Text:"你好 我的名字是小花",ignorespaces:On, Language:ChinesePRC, waitfor: 5) with error !"Verify Keyboard ChinesePRC Language"
+	
+	//Verify remoteClipboard() function
+	put remoteClipboard() into clipboard
+	if clipboard is newText
+		
+		LogSuccess "remoteClipboard() is working"
+		
+	else
+		
+		LogError "remoteClipboard() doesn't match what it was set to"
+		
+	end if
+	
+	// Get SUT clipboard value into EPF
+	put "בוקר טוב" into newText
+	TypeText ControlKey, a
+	TypeText deleteKey
+	
+	TypeText newText
+	TypeText ControlKey,a
+	TypeText ControlKey,c
+	TypeText deleteKey
+	TypeText RemoteClipboard()
+	Log RemoteClipboard()
+	
+	assert ImageFound(Text:"בוקר טוב",ignorespaces:On, Language:Hebrew, waitfor: 5) with error !"Verify Keyboard Hebrew Language"
+	
+	//Verify remoteClipboard() function
+	put remoteClipboard() into clipboard
+	if clipboard is newText
+		
+		LogSuccess "remoteClipboard() is working"
+		
+	else
+		
+		LogError "remoteClipboard() doesn't match what it was set to"
+		
+	end if
+	
+	Helper.clearNotePadText
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	Helper.clearNotePadText
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	LogError exception
+	
+	
+end try
+
+
+EndTestCase "Free RDP: Clipboard Unicode Smoke"
+

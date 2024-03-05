@@ -1,0 +1,6 @@
+﻿BeginTestCase "Keyboard Shiftkey group test"
+Run "keyboard-shiftControlKeyArrowDesktop-test_C1917788"
+Run "keyboard-shiftSpecialChar-test_C1938211"
+Run "keyboard-shortcutNumpadSpecialCharNotepad-test_C1927479"
+Run "keyboard-shortcutShiftKey-test_C1927482"
+EndTestCase "Keyboard Shiftkey group test"

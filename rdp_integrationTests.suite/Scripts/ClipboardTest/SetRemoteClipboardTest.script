@@ -1,0 +1,116 @@
+﻿BeginTestCase  "Free RDP: Set RemoteClipboard"
+--SetRemoteClipboard text
+--Typetext ControlKey & A
+--Typetext ControlKey & C
+--TypeText ControlKey & V
+--TestRail.C2212341
+
+set maxWait = 5 
+
+try
+	
+	// Launch Notepad
+	Run "Apps/LaunchNotepad"
+	
+	// Open the Excel file
+	set MyExcelFile to Workbook(ResourcePath("setRemoteClipboard_testData.xlsx"))
+	
+	// Read the data from the Excel file into a list
+	put cellRange("A1:A5") of MyExcelFile into list
+	
+	// Convert nested list into single list 
+	set list to join(list, ",")
+	set list to split(list, ",")
+	
+	// Shuffle the list so that uniqueness are created for each test run
+	shuffle list
+	
+	
+	repeat with eachItem in list
+		
+		//Put value in clipboard
+		SetRemoteClipboard eachItem
+		assert the remoteClipboard is eachItem with error !"Verify get RemoteClipboard"
+		
+		// Verify Ctrl-V value is matched with the SetRemoteClipboard value
+		TypeText ControlKey & V
+		
+		if "Helpers/SUT".findText(maxWait, eachItem,"Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+			
+			LogSuccess "Ctrl-V '" & eachItem & "' value matched with clipboard"
+			
+		else
+			
+			LogError "Ctrl-V '" & eachItem & "' value mismatched with clipboard"
+			
+		end if
+		
+		Helper.clearNotePadText maxWait
+		
+		//TypeText SetRemoteClipboard value
+		TypeText RemoteClipboard()
+		
+		if "Helpers/SUT".findText(maxWait, eachItem,"Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+			
+			LogSuccess "Value entered '" & eachItem & "' successfully"
+			
+		else
+			
+			LogError "Failed to enter value '" & eachItem & "'"
+			
+		end if
+		
+		Helper.clearNotePadText maxWait
+		
+		// Verify TypeText a new value and paste value is matched with the latest clipboard content
+		// Call the function to get the finalValue
+		set clipboardNewValue to getNewClipboardValue()
+		
+		assert the remoteClipboard is not eachItem with error !"Verify get RemoteClipboard not old value"
+		assert the remoteClipboard is clipboardNewValue with error !"Verify get RemoteClipboard is new value"
+		
+		Helper.clearNotePadText maxWait
+		
+		Typetext ControlKey & V
+		
+		if "Helpers/SUT".findText(maxWait, clipboardNewValue,"Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+			
+			LogSuccess "Success with '"& clipboardNewValue & "' is matched with the clipboard "
+			
+		else
+			
+			LogError "Failed with '" & clipboardNewValue & "' is mismatched with the clipboard" & eachItem
+			
+		end if
+		
+		Helper.clearNotePadText maxWait
+		
+	end repeat
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	Helper.clearNotePadText
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+
+// Function to set a new value into remote clipboard
+function getNewClipboardValue
+
+	set clipboardNewValue to "Remote clipboard new value."
+	
+	TypeText clipboardNewValue
+	Typetext ControlKey & A
+	Typetext ControlKey & C
+	
+	return clipboardNewValue
+	
+end getNewClipboardValue
+
+
+EndTestCase "Free RDP: Set RemoteClipboard"
+

@@ -1,0 +1,56 @@
+﻿BeginTestCase  "Free RDP: Keyboard Alphabetical Notepad Test"
+
+--TypeText A-Z/a-z
+--TestRail.C1938073
+
+set imageNameToRead = "Notepad/UntitledNotepadFileEditFormatV"
+set maxWait = 5
+
+try
+	Run "Apps/LaunchNotepad"	
+	
+	//Normal
+	set currentAlphabet = "quick brown fox mad and push over the lazy dog on snake jam"
+	CheckTextWritten currentAlphabet
+	Helper.clearNotePadText maxWait
+	//capital
+	set currentAlphabet = Uppercase(currentAlphabet)
+	CheckTextWritten currentAlphabet
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	
+	LogError exception
+	
+end try
+
+to CheckTextWritten currentAlphabet
+	typetext currentAlphabet
+	
+	typetext return
+	typetext return
+	
+	// Sample method to search text using ImageFound
+	--assert ImageFound(Text:currentAlphabet, validWords:currentAlphabet)
+	
+	//Sample method to search text using images hotspot to define the rectangle
+	set actualNotepadvalue = ReadText("Notepad/UntitledNotepadFileEditFormatV/FileEditFormatViewHelp_top_left", "Notepad/UntitledNotepadFileEditFormatV/FileEditFormatViewHelp_bottom_right",validWords:currentAlphabet)	
+	
+	--Logsuccess actualNotepadvalue
+	if actualNotepadvalue is not currentAlphabet
+		LogError "Round:Notepad show incorrect value"&&index&&"Expect: "&&currentAlphabet&&" Actual ="&&actualNotepadvalue
+	else
+		LogSuccess "Round:Notepad show correct value"&&index&&"Expect: "&&currentAlphabet&&" Actual ="&&actualNotepadvalue
+	end if
+end CheckTextWritten
+
+EndTestCase  "Free RDP: Keyboard Alphabetical Notepad Test"

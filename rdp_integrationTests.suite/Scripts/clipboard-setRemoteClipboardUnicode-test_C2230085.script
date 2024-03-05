@@ -1,0 +1,24 @@
+﻿BeginTestCase  "Free RDP: Set RemoteClipboard Unicode Test"
+
+set maxWait = 5 
+Run "ClipboardTest/SetRemoteClipboardUnicodeTest"
+
+set testData = "Chinese"
+Run "ClipboardTest/SetRemoteClipboardUnicodeTest".verify_result maxWait, testData
+
+set testData = "German"
+Run "ClipboardTest/SetRemoteClipboardUnicodeTest".verify_result maxWait, testData
+
+set testData = "Japanese"
+Run "ClipboardTest/SetRemoteClipboardUnicodeTest".verify_result maxWait, testData
+
+set testData = "Korean"
+Run "ClipboardTest/SetRemoteClipboardUnicodeTest".verify_result maxWait, testData
+
+set testData = "Hebrew"
+Run "ClipboardTest/SetRemoteClipboardUnicodeTest".verify_result maxWait, testData
+
+Helper.clearNotePadText
+run "Helpers/cleanUpWindows".cleanWindows maxWait
+
+EndTestCase "Free RDP: Set RemoteClipboard Unicode Test"

@@ -1,0 +1,63 @@
+﻿(**contains a property list of common screen portions based on the remoteScreenSize to use with the screenPart function. Format is ((side, Top), (side, top))**)
+
+Properties
+
+	topHalf: ((0, 0),(1, .5)),
+	
+	topQuarter: ((0, 0),(1, .25)),
+	
+	topEigth: ((0, 0),(1, .125)),
+	
+	topLeft: ((0,0),(.5, .5)),
+	
+	topRight: ((.5, 0), (1, .5)),
+	
+	topCenter: ((.25, 0),(.75, .5)),
+	
+	center: ((.25, .25),(.75, .75)),
+	
+	leftHalf: ((0, 0), (0.5, 1)),
+	
+	leftQuarter: ((0, 0), (.25, 1)),
+	
+	leftEigth:((0, 0), (.125, 1)),
+	
+	navBar: ((0,.0937),(0.0937,1)),
+	
+	leftThreQuarters: ((0, 0), (.75, 1)),
+	
+	rightHalf: ((.5, 0), (1, 1)),
+	
+	rightQuarter: ((.75, 0), (1, 1)),
+	
+	helptextArea: ((.625, 0), (1, 0.5)),
+	
+	rightThreeQuarters: ((0.25, 0), (1, 1)),
+	
+	rightEigth: ((.125, 0), (1, 1)),
+	
+	bottomHalf: ((0, .5), (1, 1)),
+	
+	bottomQuarter: ((0, .75), (1, 1)),
+	
+	bottomLeftCorner: ((0, .75), (.5, 1)),
+	
+	bottomLeft: ((0, .5), (.5, 1)),
+	
+	bottomRight: ((.5, .5), (1, 1)),
+	
+	appWindow: ((0, 0), (1, 1)),
+	
+	appWindowTopHalf: ((0, .06), (1, .5)),
+	
+	appWindowBottomHalf: ((0, .5), (1, .96)),
+	
+	appWindowRightHalf: ((.5, .06), (1, 1)),
+	
+	appWindowLeftHalf: ((0, .06), (.5, 1)),
+	
+	appWindowScrollingBarRight: ((.98, 0), (1, 1)),
+	
+	appWindowLeftHalfExplorer: ((.154, .145), (.4, .7)),
+	
+end Properties

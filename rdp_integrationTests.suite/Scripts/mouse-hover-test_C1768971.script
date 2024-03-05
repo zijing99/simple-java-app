@@ -1,0 +1,157 @@
+﻿BeginTestCase  "Free RDP: Mouse Hover Test"
+
+--Testrail.C1768971
+
+set maxWait = 10
+set maxRight to the right of the RemoteScreenRectangle
+
+try 
+	
+	set maxWait = 10
+	set maxRight to the right of the RemoteScreenRectangle
+	
+	// Desktop Test 
+	MoveTo [(maxRight-1),0] 
+	RightClick(mouselocation())
+	
+	MoveTo ImageLocation(text:"View", SearchRectangle: "Helpers/screenPart"("Helpers/screenPortions".topRight))
+	
+	if "Helpers/SUT".findText(maxWait, "Align icons to grid","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		LogSuccess "The desktop mouse hover is successfully shown"
+	else 
+		
+		LogWarning "The desktop mouse hover is not shown"
+		
+	end if
+	
+	// Chrome Test
+	// Double Click Launch Chrome
+	DoubleClick ImageLocation(image:"Chrome/ChromeIcon", SearchRectangle: "Helpers/screenPart"("Helpers/screenPortions".appWindow))
+	
+	if ImageFound(imageName:"Chrome/ExpandButton", waitFor:maxWait)
+		
+		Click "Chrome/ExpandButton"
+		
+	end if 
+	
+	// Verify Chrome Launch 
+	"Helpers/SUT".waitForText maxWait, "New Tab", "Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+	
+	// Move to Refresh Icon 
+	MoveTo Image:"Chrome/RefreshButton", WaitFor:maxWait
+	
+	// Validate Refresh Icon Hover
+	if ImageFound ("Chrome/RefreshButton_hover")
+		
+		LogSuccess "The refresh button hover is successfully shown"
+		
+	else 
+		
+		LogWarning "The refresh button hover is not shown"
+		
+	end if
+	
+	// Move to Google Menu
+	MoveTo Image:"Chrome/GoogleMenuButton", WaitFor:maxWait
+	
+	// Validate Google Menu Hover
+	if ImageFound ("Chrome/GoogleMenuButton_hover")
+		
+		LogSuccess "The Google Menu hover is successfully shown"
+		
+	else 
+		
+		LogWarning "The Google Menu hover is not shown"
+		
+	end if
+	
+	// Move to Customize Icon
+	MoveTo Image:"Chrome/CustomizeChangeIcon", WaitFor:maxWait
+	
+	// Validate Customize Icon Hover
+	if ImageFound ("Chrome/CustomizeChangeIcon_hover")
+		
+		LogSuccess "The customize icon hover is successfully shown"
+		
+	else 
+		
+		LogWarning "The customize icon hover is not shown"
+		
+	end if
+	
+	// Use Case 2
+	// Move Google Chrome into Preset Location
+	Log MoveFolderFunction.moveFolderHoldRelease("Chrome/ChromeNewTab", centerLeft of the RemoteScreenRectangle)
+	
+	// Launch New Windows Using Mouse
+	Run "Apps/LaunchChrome", "Maximize"
+	
+	// Move Second Chrome into Preset Location
+	Log MoveFolderFunction.moveFolderHoldRelease("Chrome/ChromeNewTab", centerRight of the RemoteScreenRectangle)
+	
+	// Restore the First Google Chrome 
+	"Helpers/SUT".clickText maxWait, "New Tab", "Helpers/screenPart"("Helpers/screenPortions".topLeft), offset:[20,50] by name 
+
+	"Helpers/SUT".clickText maxWait, "Search Google", "Helpers/screenPart"("Helpers/screenPortions".topRight) by name 
+	
+	TypeText "eggplantsoftware.gitlab.io/products/epf/testbenchpages/test_bench_image_finding.html"
+	TypeText returnKey
+	
+	// Make First Google Chrome As Primary Window
+	"Helpers/SUT".clickText maxWait, "Search Google", "Helpers/screenPart"("Helpers/screenPortions".topLeft) by name 
+	
+	TypeText "https://docs.eggplantsoftware.com"
+	TypeText returnKey
+	
+	"Helpers/SUT".clickText maxWait, "KEYSIGHT", "Helpers/screenPart"("Helpers/screenPortions".leftHalf) by name 
+	
+	// Scroll and Validate on Primary Window
+	Repeat until ImageFound(text: "Performance", SearchRectangle:"Helpers/screenPart"("Helpers/screenPortions".leftHalf))
+		
+		ScrollWheelDown 5
+		LogSuccess "Mouse Scroll Successfully"
+		
+		if repeatIndex() > 3
+			LogWarning "The Mouse Scroll Failed"
+			exit repeat
+		end if
+		
+	End Repeat
+	
+	// Move Mouse Cursor to Second Google Chrome
+	MoveTo text:"Usability", SearchRectangle:"Helpers/screenPart"("Helpers/screenPortions".rightHalf)
+	
+	// Scroll and Validate on Secondary Window
+	Repeat until ImageFound(text: "bottom of the page",SearchRectangle:"Helpers/screenPart"("Helpers/screenPortions".rightHalf))
+		ScrollWheelDown 5
+		LogSuccess "Scrolled to the bottom of the page"
+		
+		if repeatIndex() > 3
+			LogWarning "The Bottom of the page is not found"
+			exit repeat
+		end if
+		
+	End Repeat
+	
+	// Close the second Google Chrome
+	"Helpers/SUT".clickText maxWait, "bottom of the page", "Helpers/screenPart"("Helpers/screenPortions".bottomRight) by name 
+	TypeText altKey&F4
+	
+	// Restore the chrome to expand mode
+	if ImageFound(imageName:"Chrome/ExpandButton", waitFor:maxWait)
+		
+		Click "Chrome/ExpandButton"
+		
+	end if 
+	
+	// Close the first Google Chrome
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Mouse Hover Test"

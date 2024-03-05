@@ -1,0 +1,7 @@
+﻿BeginTestCase  "Free RDP: Keyboard numeric Test"
+Run "KeyboardTest/NumericNotepadTest"
+Run "KeyboardTest/NumericCalculatorTest"
+EndTestCase "Free RDP: Keyboard numeric Test"
+
+// Why is the use case repeated using Browser, where the core is just to ensure numeric key event are able to triggered correctly?
+// Numeric Calculator purpose is to?

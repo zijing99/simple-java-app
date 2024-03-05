@@ -1,0 +1,99 @@
+﻿BeginTestCase  "Free RDP: Clipboard Smoke"
+--SetRemoteClipboard the time
+--Log RemoteClipboard()
+--TypeText ControlKey & V
+--TestRail.C2266270
+
+set maxWait = 5 
+
+try
+	
+	//Launch Notepad
+	Run "Apps/LaunchNotepad"
+	
+	//Sends the current system time to the SUT clipboard
+	setremoteClipboard the time
+	Log remoteclipboard() 
+	
+	//Verify get clipboard content
+	assert the remoteClipboard is the time with error !"Verify get RemoteClipboard"
+	
+	//Set remote clipboard to new text content
+	put "Remote clipboard smoke test" into newText
+	setremoteClipboard newText
+	
+	//Sends the keystrokes to the SUT to carry out the paste action
+	TypeText ControlKey & V, return
+	
+	//Verify paste value match the new value set
+	if "Helpers/SUT".findText(maxWait, newText,"Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		LogSuccess "SetRemoteClipboard is working"
+		
+	else
+		
+		LogError "Couldn't find the pasted text"
+		
+	end if
+	
+	//Verify remoteClipboard() function
+	put remoteClipboard() into clipboard
+	if clipboard is newText
+		
+		LogSuccess "remoteClipboard() is working"
+		
+	else
+		
+		LogError "remoteClipboard() doesn't match what it was set to"
+		
+	end if
+	
+	// Get SUT clipboard value into EPF
+	put "Value to be copy" into newText
+	TypeText ControlKey, a
+	TypeText deleteKey
+	
+	TypeText newText
+	TypeText ControlKey,a
+	TypeText ControlKey,c
+	TypeText deleteKey
+	TypeText RemoteClipboard()
+	
+	//Verify remote clipboard value match the new value set
+	if "Helpers/SUT".findText(maxWait, newText,"Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		LogSuccess "RemoteClipboard() matched SUT clipboard value."
+		
+	else
+		
+		LogError "RemoteClipboard() not matching with SUT clipboard value."
+		
+	end if
+	
+	//Verify remoteClipboard() function
+	put remoteClipboard() into clipboard
+	if clipboard is newText
+		
+		LogSuccess "remoteClipboard() is working"
+		
+	else
+		
+		LogError "remoteClipboard() doesn't match what it was set to"
+		
+	end if
+	
+	Helper.clearNotePadText
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	catch exception
+	
+	Helper.clearNotePadText
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	LogError exception
+	
+	
+end try
+
+
+EndTestCase "Free RDP: Clipboard Smoke"
+

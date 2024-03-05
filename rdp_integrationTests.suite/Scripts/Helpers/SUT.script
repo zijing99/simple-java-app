@@ -1,0 +1,141 @@
+﻿﻿(** Handlers for interactions with the SUT not specific to DAI**)
+
+
+--@Author Ian Fone
+--@Description: Finds text on screen using OCR. Forms the basis for the other functions in this script.
+--@param maxWait: time in seconds to wait for text to be found
+--@param theText: text to search for. Should be a specific as possible
+--@param searchRectangle: the area to search in. Defaults to screenPortions.appWindow if left empty
+--@param useRegex: if true, the text will be searched for using the regex pattern defined in the handler "formatText". Defaults to false, in which case a plain text search is used.
+--@param caseSensitive: standard senseTalk parameter for applying case sensitivity to OCR searches. Defaults to true
+--@param enhanceLocalContrast: standard senseTalk parameter for enhancing the contrast of the SUT. Defaults to true
+--@param captureScreenshot: Boolean - if true a warning will be logged and a screenshot captured using the specified searchRectangle if text is not found. Defaults to true.
+--@returns foundImageInfo if the text is found or captures a screenshot of the specified searchRectangle and returns empty if not found.
+to findText maxWait, theText, searchRectangle, useRegex=false, caseSensitive="yes", enhanceLocalContrast="yes", captureScreenshot=true
+
+	if searchRectangle is empty then put "Helpers/screenPart"("Helpers/screenPortions".appWindow) into searchRectangle -- senseTalk bug workaround - using function calls as default parameter value causes problems
+	
+	log !"looking for text: '[[theText]]'" && (if useRegex then "using regex match..." else "...") 
+	Wait 0.4 -- suggested by Mark Fernee as something that actually improves OCR efficiency
+	
+	if imageFound(waitFor:maxWait, text:formatText(theText, useRegex) , searchRectangle:searchRectangle, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast) then
+		return FoundImageInfo()
+	else
+		if captureScreenshot then
+			LogWarning formatErrorMessage(maxWait:maxWait, theText:theText, useRegex:useRegex, searchRectangle:searchRectangle by name)
+			put the first 25 characters of theText into screenshotName -- limit the number of characters for the screenshot name
+			CaptureScreen (Name: !"[[trimAll(screenshotName)]]NotFound", Rectangle: searchRectangle)
+		end if
+		return empty
+	end if
+	
+end findText
+
+
+--@Author Ian Fone
+--@Description: Clicks the center of text to be found on screen and throws and error if not found.
+--@param offset - list of 2 values that change the position of the click relative to the found location. EG (0, 15) would click 15 pixels below the found location (-15,0) would click 15 to the left
+to clickText maxWait, theText, searchRectangle, useRegex=false, caseSensitive="yes", enhanceLocalContrast="yes", offset=empty
+
+	put findText(maxWait:maxWait, theText:theText, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast by name) into foundLocation
+	
+	if foundLocation is not empty then
+		put foundLocation.ImageLocation into textLocation
+		if offset is not empty then
+			add offset to textLocation
+		end if
+		click textLocation
+	else
+		throw "ClickText Error", !"Could not click text '[[theText]]' as it was not found."
+	end if
+	
+end clickText
+
+--@Author Zi Jing Tan
+to doubleClickText maxWait, theText, searchRectangle, useRegex=false, caseSensitive="yes", enhanceLocalContrast="yes", offset=empty
+
+	put findText(maxWait:maxWait, theText:theText, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast by name) into foundLocation
+	
+	if foundLocation is not empty then
+		put foundLocation.ImageLocation into textLocation
+		if offset is not empty then
+			add offset to textLocation
+		end if
+		DoubleClick textLocation
+	else
+		throw "ClickText Error", !"Could not kdouble click text '[[theText]]' as it was not found."
+	end if
+	
+end doubleClickText
+
+
+
+--@Author Ian Fone
+--@Description: Waits for text to be found on screen and throws and error if not found
+to waitForText  maxWait, theText, searchRectangle, useRegex=false, caseSensitive="yes", enhanceLocalContrast="yes"
+	
+	if findText(maxWait:maxWait, theText:theText, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast by name) is empty then
+		throw "WaitForText Error", !"Waited for text '[[theText]]' for [[maxWait]] seconds but it was not found."
+	else
+		logSuccess !"Text '[[theText]]' found"
+	end if
+	
+end waitForText
+
+
+--@Author Ian Fone
+--@Description: asserts text is found on screen and throws and error if not found
+to assertTextFound maxWait, theText, customMessage, searchRectangle, expected=true, useRegex=false, caseSensitive="yes", enhanceLocalContrast="yes"
+	
+	if expected then
+		
+		put findText(maxWait:maxWait, theText:theText, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast by name) into textLocation
+		put textLocation is not empty into textFound
+		put (if customMessage is empty then !"Asserting text: '[[theText]]' is found... " else !"[[customMessage]] ") into message
+		assert textFound with error message
+		
+	else
+		
+		#don't log a warning and capture a screenshot if we expect the text to not be found
+		put findText(maxWait:maxWait, theText:theText, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast, captureScreenshot:false by name) into textLocation
+		put textLocation is empty into textNotFound
+		put (if customMessage is empty then !"Asserting text: '[[theText]]' is NOT found... " else !"[[customMessage]] ") into message
+		assert textNotFound with error message
+		
+	end if
+	
+end assertTextFound
+
+--@Author Ian Fone
+--@Description: uses findText to get the imageLocation of 2 bits of text and returns the 2 values in a list that can be set as the searchRectangle or manipulated as required
+--@returns: list of 2 imageLocations
+to getTwoTextLocations maxWait, firstWord, secondWord, searchRectangle, useRegex=false, caseSensitive="yes", enhanceLocalContrast="yes"
+
+	put findText(maxWait:maxWait, theText:firstWord, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast by name)'s "ImageLocation" into locationA
+	put findText(maxWait:maxWait, theText:secondWord, searchRectangle:searchRectangle, useRegex:useRegex, caseSensitive:caseSensitive, enhanceLocalContrast:enhanceLocalContrast by name)'s "ImageLocation" into locationB
+	if locationA is empty then throw "FindText Error", !"Could not get the location of text [[firstWord]] as it was not found"
+	if locationB is empty then throw "FindText Error", !"Could not get the location of text [[secondWord]] as it was not found"
+	
+	return [locationA, locationB]
+
+end getTwoTextLocations
+
+
+--@Author Ian Fone
+--@Description: puts the specified text into a regex pattern if required
+--@returns: regex pattern if useRegex is true else just returns theText
+to formatText theText, useRegex
+
+	return (if useRegex then <not preceded by (1 to 2 characters," ") , theText, not followed by (" ", characters)> else theText)
+	
+end formatText
+
+
+--@Author Ian Fone
+--@Description: formats the parameter inputs into a consistent error message
+to formatErrorMessage maxWait, theText, useRegex, searchRectangle
+
+	set usingRegex to (if useRegex then "using regex match" else "using plain text search")
+	return !"Text '[[theText]]' could not be found [[usingRegex]] within the search rectangle [[searchRectangle]] after [[maxWait]] seconds"
+	
+end formatErrorMessage

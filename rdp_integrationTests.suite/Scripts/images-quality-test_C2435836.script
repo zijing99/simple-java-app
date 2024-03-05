@@ -1,0 +1,83 @@
+﻿
+BeginTestCase "Rdp - Image Color"
+
+Try
+	set maxWait =5
+	
+	// Launch New Windows Using Mouse
+	Run "Apps/LaunchChrome", "Maximize"
+	TypeText "https://eggplantsoftware.gitlab.io/products/epf/testbenchpages/checkColors.html"
+	TypeText returnKey
+	
+	// Colors identified on epgw 3.15 (EPF 23.0.1)
+	set productionColors to {
+		red_green: [0,210,0] as color,
+		blue: [0,0,206] as color,
+		red: [206,0,0] as color,
+		gray: [173,210,239] as color,
+		green: [0,210,0] as color,
+		pink_orange_gray: [254,254,254] as color,
+		purple: [140,140,254] as color,
+		blue_orange_purple: [1,0,140] as color
+	}
+	
+	
+	log ImageFound(ImageName:"Colors/red_green")
+	set foundRedGreen to ColorAtLocation("Colors/red_green") 
+	log "found this Red & Green: "&foundRedGreen
+	
+	log ImageFound(ImageName:"Colors/blue")
+	set foundBlue to ColorAtLocation("Colors/blue") 
+	log "found this Blue: "&foundBlue
+	
+	log ImageFound(ImageName:"Colors/red")
+	set foundRed to ColorAtLocation("Colors/red") 
+	log "found this Red: "&foundRed
+	
+	log ImageFound(ImageName:"Colors/gray")
+	set foundGray to ColorAtLocation("Colors/gray") 
+	log "found this Gray: "&foundGray
+	
+	log ImageFound(ImageName:"Colors/green")
+	set foundGreen to ColorAtLocation("Colors/green") 
+	log "found this Green: "&foundGreen
+	
+	log ImageFound(ImageName:"Colors/pink_orange_gray")
+	set foundPink_orange_gray to ColorAtLocation("Colors/pink_orange_gray") 
+	log "found this pink_orange_gray: "&foundPink_orange_gray
+	
+	log ImageFound(ImageName:"Colors/purple")
+	set foundpurple to ColorAtLocation("Colors/purple") 
+	log "found this purple: "&foundpurple
+	
+	log ImageFound(ImageName:"Colors/blue_orange_purple")
+	set foundblue_orange_purple to ColorAtLocation("Colors/blue_orange_purple") 
+	log "found this blue_orange_purple: "&foundblue_orange_purple
+	
+	compareColor foundRedGreen, productionColors.red_green
+	compareColor foundBlue, productionColors.blue
+	compareColor foundRed, productionColors.red
+	compareColor foundGray, productionColors.gray
+	compareColor foundGreen, productionColors.green
+	compareColor foundPink_orange_gray, productionColors.pink_orange_gray
+	compareColor foundpurple, productionColors.purple	
+	compareColor foundblue_orange_purple, productionColors.blue_orange_purple
+	
+	Click ImageLocation(ImageName:"Colors/red_green")	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+Catch theException
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError theException
+End try
+
+to compareColor foundColor, expectedColor
+	if foundColor = expectedColor
+		Log !"[[foundColor]] matches [[expectedColor]]"
+	else
+		LogError !"Found [[foundColor]] but expected [[expectedColor]]"
+	end if
+end compareColor
+
+EndTestCase "Rdp - Image Color"
+

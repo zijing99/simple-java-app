@@ -1,0 +1,58 @@
+﻿BeginTestCase  "Free RDP: Mouse Drag Relase Test"
+
+--TestRail.C1727280
+
+set currentXSize to the right of the RemoteScreenRectangle
+set currentYSize to the bottom of the RemoteScreenRectangle
+set desktopCenterPoint to the center of the RemoteScreenRectangle
+set maxRight to the right of the RemoteScreenRectangle
+set imageToTest =  "Chrome/ChromeIcon"
+set failCount = 0
+set passCount = 0
+
+try
+	
+	MoveTo ImageLocation(imageToTest)
+	set earlyIconCoor = MouseLocation()
+	click imageToTest
+	Drag earlyIconCoor
+	Release desktopCenterPoint
+	set ReleaseSpeed = 25
+	repeat until ReleaseSpeed > 25
+		
+		set i = 100
+		put [[i,i],[i,0],[0,i],[-i,i],[-i,i],[-i,-i],[-i,0],[0,-i]] into MoveList
+		repeat MoveList
+			
+			set roundCount = roundCount + 1
+			set returnResult =  "MouseDragFunction".MouseDragReleaseDesktopIcon(imageToTest,it,ReleaseSpeed)
+			
+			if returnResult = true
+				set passCount = passCount + 1
+			else if returnResult = false
+				set failCount = failCount + 1
+			end if
+			
+		end repeat
+		
+		set ReleaseSpeed = ReleaseSpeed + 5
+		
+	end repeat
+	
+	Drag imageToTest
+	Release earlyIconCoor
+	
+	
+	if (failCount/roundCount) > 0.05
+		LogError "Passing Rate ="&&((passCount/roundCount)*100) & "%" && RemoteScreenSize()
+	else if (passCount/roundCount) > 0.94
+		LogSuccess "Passing Rate ="&&((passCount/roundCount)*100) & "%" && RemoteScreenSize()
+	end if	
+	
+catch exception
+
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Mouse Drag Relase Test"

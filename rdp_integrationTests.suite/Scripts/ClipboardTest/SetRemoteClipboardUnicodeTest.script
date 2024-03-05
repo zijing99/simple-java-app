@@ -1,0 +1,47 @@
+﻿BeginTestCase  "Free RDP: Set RemoteClipboard Unicode"
+--SetRemoteClipboard text
+--Typetext ControlKey & A
+--Typetext ControlKey & C
+--TypeText ControlKey & V
+--TestRail.C2230085
+
+//params testData, maxWait
+
+run "Helpers/zoomNotepad".zoomInNotepad maxWait
+
+to verify_result maxWait, testData
+
+	try
+		// Test Data
+		put extract_test_data(testData) into data
+		
+		// Put value in clipboard
+		SetRemoteClipboard data.text
+		assert the remoteClipboard is data.text with error !"Verify get RemoteClipboard for"&&testData
+		
+		// Verify Ctrl-V value is matched with the SetRemoteClipboard value
+		TypeText ControlKey & V, return
+		wait 2
+		assert ImageFound(Text:data.text, ignorespaces:On, Language:data.lang, waitfor: maxWait) with error !"Verify Ctrl-V matched with clipboard for"&&testData
+		
+	catch exception
+		
+		Helper.clearNotePadText
+		run "Helpers/cleanUpWindows".cleanWindows maxWait
+		LogError exception
+		
+	end try
+	
+end verify_result
+
+
+// To extract test data store in _data properties
+to extract_test_data testData
+
+	return "ClipboardTest/_data".(testData)
+	
+end extract_test_data
+
+
+EndTestCase "Free RDP: Set RemoteClipboard Unicode"
+

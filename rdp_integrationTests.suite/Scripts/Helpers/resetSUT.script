@@ -1,0 +1,23 @@
+﻿to cleanWindows maxWait 
+
+	repeat until ImageFound(imageName:"CloseIcon", waitFor:maxWait) is false
+		
+		Log "Running reset SUT..."
+		
+		if ImageFound(imageName:"CloseIcon", waitFor:maxWait) is true
+			Click imagename:"CloseIcon"
+		end if
+		
+		-- Wait for the window to close
+		wait 0.5
+		
+		if ImageFound(imageName:"Notepad/DontSaveNotepad", waitFor:maxWait) is true
+			Click imagename:"Notepad/DontSaveNotepad"
+		end if
+		
+		-- Wait for the window to close
+		wait 0.5
+		
+	end repeat
+	
+end cleanWindows

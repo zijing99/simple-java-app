@@ -1,0 +1,15 @@
+﻿--to launch wordpad
+
+Set maxwait=5
+
+TypeText WindowsKey, "r"
+TypeText "wordpad.exe", enterKey
+
+If ImageFound(imageName:"Wordpad/DocumentWordPad", waitFor:maxwait)
+	If ImageFound(imageName:"Chrome/ExpandButton", waitFor:maxwait)
+		click "Chrome/ExpandButton" -- Why use Chrome expand? Is it expand can move to generic folder, as it is same across all project.
+	end if
+	LogSuccess "WordPad launched."
+else
+	LogError "Couldn't find Wordpad."
+end if

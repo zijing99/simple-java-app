@@ -1,0 +1,107 @@
+﻿BeginTestCase  "Free RDP: Get RemoteClipboard"
+--TypeText RemoteClipboard()
+--Put RemoteClipboard() into clipboard
+--Log RemoteClipboard()
+--Typetext ControlKey & A
+--Typetext ControlKey & C
+--Typetext ControlKey & X
+--Typetext ControlKey & V
+--TestRail.C2212342
+
+set maxWait = 5 
+
+try
+	
+	//Launch Notepad
+	Run "Apps/LaunchNotepad"
+	
+	// Open the Excel file
+	set verifyExcel to Workbook(ResourcePath("setRemoteClipboard_testData.xlsx"))
+	
+	// Read the data from the Excel file into a list
+	put cellRange("B1:B5") of verifyExcel into verifyList
+	
+	// Convert nested list into single list 
+	set verifyList to join(verifyList, ",")
+	set verifyList to split(verifyList, ",")
+	
+	// Shuffle the list so that uniqueness are created for each test run
+	shuffle verifyList
+	
+	// Repeat for each data exist in verify list
+	repeat with eachItem in verifyList
+		
+		// Control C remote clipboard test
+		performTest eachItem, "C", maxWait
+		
+		// Control X remote clipboard test
+		performTest eachItem, "X", maxWait
+		
+	end repeat
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	Helper.clearNotePadText
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	LogError exception
+	
+	
+end try
+
+
+to performTest text, key, maxWait
+
+	TypeText text
+	Typetext ControlKey & A
+	Typetext ControlKey & (key)
+	
+	TypeText backspace
+	
+	// Verify RemoteClipboard() value return matched with Copy and Cut content in SUT
+	// Get clipboard content using TypeText 
+	TypeText remoteClipboard()
+	if "Helpers/SUT".findText(maxWait, text,"Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		
+		LogSuccess "TypeText RemoteClipboard value is matched with Ctrl-"&key&&"value"
+		
+	else 
+		
+		LogError "TypeText RemoteClipboard value is mismatched with Ctrl-"&key&&"value"
+		
+	end if
+	
+	
+	//Get clipboard content using Put
+	put remoteClipboard() into clipboard
+	if clipboard is text
+		
+		LogSuccess "Put RemoteClipboard value is matched"	
+		
+	else
+		
+		LogError "Put RemoteClipboard value is mismatched"
+		
+	end if
+	
+	assert the remoteClipboard is text with error !"Verify get RemoteClipboard"
+	
+	Helper.clearNotePadText
+	
+	// Set RemoteClipboard content 
+	put "Life is a beautiful adventure" into verifyText
+	setRemoteClipboard(verifyText)
+	assert the remoteClipboard is verifyText with error !"Verify get RemoteClipboard"
+	
+	// Clear the text and verifyText variable 
+	put empty into text
+	put empty into verifyText
+	
+	Helper.clearNotePadText
+	
+end performTest
+
+
+EndTestCase "Free RDP: Get RemoteClipboard"
+

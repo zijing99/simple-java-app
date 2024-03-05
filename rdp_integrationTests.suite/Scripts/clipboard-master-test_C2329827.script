@@ -1,0 +1,4 @@
+﻿BeginTestCase "FreeRDP: Get and Set Remote Clipboard Master Test"
+Run "clipboard-remoteClipboard-test_C2212342"
+Run "clipboard-setRemoteClipboard-test_C2212341"
+EndTestCase "FreeRDP: Get and Set Remote Clipboard Master Test"

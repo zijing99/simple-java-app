@@ -1,0 +1,30 @@
+﻿properties
+
+	Chinese: {
+		text: "你好 我的名字是小花",
+		lang: "ChinesePRC"
+	
+	},
+	
+	German: {
+		text: "Hallo wie geht's dir",
+		lang: "German"
+	},
+	
+	Japanese: {
+		text: "こんにちは、元気ですか",
+		lang: "Japanese"
+	},
+	
+	Korean: {
+		text: "안녕하세요",
+		lang: "Korean"
+	},
+	
+	Hebrew: {
+		text: "שלום מה שלומך",
+		lang: "Hebrew"
+	},
+	
+	
+end properties

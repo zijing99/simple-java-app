@@ -1,0 +1,4 @@
+﻿BeginTestCase  "Free RDP: Clipboard Smoke Test"
+Run "ClipboardTest/ClipboardSmokeTest"
+EndTestCase "Free RDP: Clipboard Smoke Test"
+

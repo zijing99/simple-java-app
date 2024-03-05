@@ -1,0 +1,66 @@
+﻿BeginTestCase "RDP: ScrollUpDownTest"
+
+set roundCount  = 0
+set passCount = 0
+set failCount = 0
+set maxWait = 5
+
+try 
+	
+	MoveTo imageName:"Chrome/chromeIcon", waitFor:maxWait
+	DoubleClick "Chrome/chromeIcon"
+	
+	// Launch Chrome in expand mode
+	if ImageFound(imageName:"Chrome/ExpandButton", waitFor:maxWait)
+		
+		Click "Chrome/ExpandButton"
+		
+	end if 
+	
+	
+	TestBench.Launch "Image Finding"
+	
+	-- Scroll down to bottom of the page
+	set roundCount = 0
+	repeat until TestBench.BottomOfPage
+		ScrollWheelDown 1
+		set roundCount to repeatIndex()
+		if repeatIndex() > 10
+			set failCount = failCount + 1
+			LogWarning "scroll wheel down test failed."
+			exit repeat
+		end if
+	end repeat
+	
+	if roundCount <= 10
+		set passCount = passCount + 1
+		LogSuccess "scroll wheel down test passed, scrolled"&&roundCount&&"time(s)."
+	end if
+	
+	-- Scroll up to top of the page
+	set roundCount = 0
+	repeat until TestBench.TopOfPage
+		ScrollWheelUp 1
+		set roundCount to repeatIndex()
+		if repeatIndex() > 10
+			set failCount = failCount + 1
+			LogWarning "scroll wheel up test failed."
+			exit repeat
+		end if
+	end repeat
+	
+	if roundCount <= 10
+		set passCount = passCount + 1
+		LogSuccess "scroll wheel up test passed, scrolled"&&roundCount&&"time(s)."
+	end if
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "RDP: ScrollUpDownTest"

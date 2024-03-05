@@ -1,0 +1,52 @@
+﻿BeginTestCase  "Free RDP: Keyboard Enter Key Test"
+
+--TypeText Return, TypeText EnterKey
+--TestRail.C1915518
+
+put 5 into maxWait 
+
+try
+	
+	//Verify launch Recycle Bin using returnKey
+	"Helpers/SUT".clickText maxWait, "Recycle Bin","Helpers/screenPart"("Helpers/screenPortions".topLeft)
+	TypeText Return
+	
+	if "Helpers/SUT".findText(maxWait, "Recycle Bin","Helpers/screenPart"("Helpers/screenPortions".appWindow)) is not empty
+		LogSuccess "The desktop mouse hover is successfully shown"
+	else 
+		LogWarning "The desktop mouse hover is not shown"
+	end if
+	
+	TypeText altKey,F4
+	
+	//Verify enter new line in Notepad using enterKey
+	Run "Apps/LaunchNotepad"
+	TypeText "Line1"
+	TypeText EnterKey
+	TypeText "NewLine2"
+	TypeText EnterKey
+	TypeText "NewLine3"
+	TypeText EnterKey, EnterKey
+	TypeText "NewLine4"
+	TypeText EnterKey
+	
+	if imagefound("Notepad/EnterNewLine")
+		LogSuccess "Enter new line Success using enterKey" && RemoteScreenSize()
+	else
+		LogError "Fail to enter new line using enterKey" && RemoteScreenSize()
+	end if
+	
+	Helper.clearNotePadText maxWait
+	Helper.resetAndCloseNotepad maxWait
+	
+catch exception
+	
+	Helper.clearNotePadText maxWait
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Keyboard Enter Key Test"
+
+

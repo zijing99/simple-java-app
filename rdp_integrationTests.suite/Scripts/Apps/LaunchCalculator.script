@@ -1,0 +1,10 @@
+﻿--to launch calculator
+
+try
+	
+	TypeText WindowsKey, "r"
+	TypeText "calc.exe", enterKey
+	LogSuccess "Launched calculator."
+catch
+	logError "Unable to launch calculator."
+end try

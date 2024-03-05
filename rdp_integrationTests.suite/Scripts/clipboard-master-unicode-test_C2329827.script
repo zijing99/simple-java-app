@@ -1,0 +1,5 @@
+﻿BeginTestCase "FreeRDP: Get and Set Remote Clipboard Unicode Master Test"
+//Remote Clipboard - Unicode not supported. Note: Allow failure until it is supported
+Run "clipboard-remoteClipboardUnicode-test_C2230288"
+Run "clipboard-setRemoteClipboardUnicode-test_C2230085"
+EndTestCase "FreeRDP: Get and Set Remote Clipboard Unicode Master Test"

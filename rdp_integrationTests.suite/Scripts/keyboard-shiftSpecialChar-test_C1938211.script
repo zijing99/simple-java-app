@@ -1,0 +1,4 @@
+﻿BeginTestCase  "Free RDP: Keyboard shift special characters Test"
+Run "KeyboardTest/ShiftSpecialCharNotepadTest"
+EndTestCase "Free RDP: Keyboard shift special characters Test"
+

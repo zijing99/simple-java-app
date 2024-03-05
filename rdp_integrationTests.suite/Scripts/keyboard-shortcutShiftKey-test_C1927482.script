@@ -1,0 +1,84 @@
+﻿BeginTestCase  "Free RDP: Keyboard Shortcut Shift Key Test"
+--TypeText ShiftKey&DeleteKey
+--TypeText ShiftKey&InsertKey
+--TypeText Shiftkey&HomeKey 
+--TypeText Shiftkey&EndKey
+--TestRail.C1927482
+
+
+set maxWait = 4
+
+try
+	
+	
+	//Defect, please referto EPF-21526
+	
+	// Shift + del and ins test 
+	// Ins key currently is not supported 
+	"KeyboardTest/ShortcutShiftKeyFunction".shiftDelAndInsTest maxWait
+	
+	if ImageFound(imageName:"Notepad/ControlXTest", waitFor:maxWait)
+		
+		LogSuccess "The shift del and ins is sucessfully executed"
+		
+	else 
+		
+		LogError "The shift del and ins is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+	// Shift + home test
+	"KeyboardTest/ShortcutShiftKeyFunction".shiftHomeTest maxWait
+	
+	if ImageFound(imageName:"Notepad/ShiftHomeTest", waitFor:maxWait)
+		
+		LogSuccess "The shift home is sucessfully executed"
+		
+	else 
+		
+		LogError "The shift home is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	// Shift + end test
+	"KeyboardTest/ShortcutShiftKeyFunction".shiftEndTest  maxWait
+	
+	if ImageFound(imageName:"Notepad/ShiftEndTest", waitFor:maxWait)
+		
+		LogSuccess "The shift end is sucessfully executed"
+		
+	else 
+		
+		LogError "The shift end is not executed"
+		
+	end if
+	
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/cleanUpWindows".cleanWindows maxWait
+	
+	
+catch exception
+	# Clear the notepad text and also to make sure notepad is in focus
+	Helper.clearNotePadText maxWait	
+	
+	run "Helpers/resetSUT".cleanWindows maxWait
+	LogError exception
+	
+end try
+EndTestCase "Free RDP: Keyboard Shortcut Shift Key Test"
+
+
+

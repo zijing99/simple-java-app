@@ -1,0 +1,66 @@
+﻿BeginTestCase  "Free RDP: Get RemoteClipboard Unicode"
+--Log RemoteClipboard()
+--Typetext ControlKey & A
+--Typetext ControlKey & C
+--TypeText ControlKey & V
+--TestRail.C2230288
+
+//params testData, maxWait
+
+run "Helpers/zoomNotepad".zoomInNotepad maxWait
+
+to verify_result maxWait, testData
+
+	try
+		// Test Data
+		put extract_test_data(testData) into data
+		
+		performTest data.text, data.lang, "C", maxWait
+		performTest data.text, data.lang, "X", maxWait
+		
+		Helper.clearNotePadText maxWait
+		
+	catch exception
+		
+		Helper.clearNotePadText
+		run "Helpers/cleanUpWindows".cleanWindows maxWait
+		LogError exception
+		
+		
+	end try
+end verify_result
+
+// To extract test data store in _data properties
+to extract_test_data testData
+
+	return "ClipboardTest/_data".(testData)
+	
+end extract_test_data
+
+to performTest text, lang, key, maxWait
+
+	// TypeText and Copy/Cut
+	TypeText text
+	TypeText ControlKey & A
+	TypeText ControlKey & (key)
+	
+	// Verify get clipboard content
+	TypeText remoteClipboard()
+	TypeText return
+	assert ImageFound(Text:text, ignorespaces:On, Language:lang, waitfor: maxWait) with error !"Verify get RemoteClipboard for"&&testData
+	
+	//Verify paste content
+	TypeText ControlKey & A
+	TypeText deleteKey
+	TypeText ControlKey & V
+	TypeText return
+	wait 2
+	assert ImageFound(Text:text, ignorespaces:On, Language:lang, waitfor: maxWait) with error !"Verify Ctrl-V matched with clipboard for"&&testData
+	
+	Helper.clearNotePadText maxWait
+	
+end performTest
+
+
+EndTestCase "Free RDP: Get RemoteClipboard Unicode"
+

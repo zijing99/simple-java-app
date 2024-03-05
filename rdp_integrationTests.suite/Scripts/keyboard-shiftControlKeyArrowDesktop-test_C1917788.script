@@ -1,0 +1,83 @@
+﻿BeginTestCase  "Free RDP: Keyboard Shift Control Key Arrow Desktop Test"
+
+--TypeText controlKey, shiftKey,"n"
+--TypeText controlKey,"c"
+--TypeText controlKey,"v"
+--TypeText shiftKey,downArrow
+--TypeText deleteKey
+--TestRail.C1917788
+
+try
+	set maxWait = 5
+	set searchRectangle="Helpers/screenPart"("Helpers/screenPortions".appWindowLeftHalfExplorer)
+	
+	Run "Apps/LaunchExplorer","Maximize"
+	Click "FileExplorer/DesktopIconText"
+	
+	--to delete test folders if exists. 
+	set deleteIndex = 1
+	
+	if ImageFound(Image:"FileExplorer/ShiftFolder") = true
+		Click text:"ShiftFolder"
+		TypeText deleteKey	
+	end if
+	
+	TypeText controlKey, shiftKey,"n"
+	TypeText "ShiftFolder"
+	TypeText return
+	DoubleClick text:"ShiftFolder"
+	
+	set index = 1
+	repeat until index > 7
+		TypeText controlKey, shiftKey,"n"
+		TypeText index
+		TypeText return
+		set index = index + 1
+	end repeat
+	
+	"Helpers/SUT".clickText maxWait , "1", searchRectangle
+	TypeText shiftKey,downArrow
+	TypeText shiftKey,downArrow
+	TypeText shiftKey,downArrow
+	TypeText deleteKey
+	
+	if imagefound(Image:"FileExplorer/ShiftDeleteValidation")
+		LogError "Fail to delete via shift selection folder"
+	else
+		LogSuccess "Shift delete function success"
+	end if
+	
+	"Helpers/SUT".clickText maxWait , "7", searchRectangle
+	TypeText controlKey,"c"
+	TypeText controlKey,"v"
+	
+	//unfocus 
+	"Helpers/SUT".clickText maxWait , "5", searchRectangle, offset:[0,300] by name 
+
+	if imagefound(Image:"FileExplorer/ShiftFolder7CopyValidation")
+		LogSuccess "Shortcut copy folder success"
+	else
+		LogError "Fail to copy via shortcut Ctrl + C"
+	end if
+	
+	//Clean up all folders created
+	"Helpers/SUT".clickText maxWait , "5", searchRectangle
+	TypeText shiftKey,downArrow
+	TypeText shiftKey,downArrow
+	TypeText shiftKey,downArrow
+	TypeText deleteKey
+	
+	Click "FileExplorer/DesktopIconText"
+	Click text:"ShiftFolder"
+	TypeText deleteKey
+	
+	run "Helpers/cleanUpWindows".cleanWindows 10
+	
+catch exception
+	
+	run "Helpers/resetSUT".cleanWindows 5
+	LogError exception
+	
+end try
+
+EndTestCase  "Free RDP: Keyboard Shift Control Key Arrow Desktop Test"
